@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import index from '@/views/index.vue'
 import user from '@/views/user.vue'
+import userAdd from '@/views/userAdd.vue';
 import department from '@/views/department.vue'
 import job from '@/views/job.vue'
 import employee from '@/views/employee.vue'
@@ -21,6 +22,9 @@ const routes = [{
       path: 'user',
       component: user
     }, {
+      path: 'userAdd',
+      component: userAdd
+    },{
       path: 'department',
       component: department
     }, {

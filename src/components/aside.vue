@@ -32,10 +32,11 @@ export default {
                     subMenus: [
                         {
                             title: "用户查询",
-                            path: '/index/user',
+                            path: "/index/user",
                         },
                         {
                             title: "添加用户",
+                            path: "/index/userAdd",
                         },
                     ],
                 },
@@ -45,7 +46,7 @@ export default {
                     subMenus: [
                         {
                             title: "部门查询",
-                            path: '/index/department',
+                            path: "/index/department",
                         },
                         {
                             title: "添加部门",
@@ -58,7 +59,7 @@ export default {
                     subMenus: [
                         {
                             title: "职位查询",
-                            path: '/index/job',
+                            path: "/index/job",
                         },
                         {
                             title: "添加职位",
@@ -71,7 +72,7 @@ export default {
                     subMenus: [
                         {
                             title: "员工查询",
-                            path: '/index/employee',
+                            path: "/index/employee",
                         },
                         {
                             title: "添加员工",
@@ -84,7 +85,7 @@ export default {
                     subMenus: [
                         {
                             title: "公告查询",
-                            path: '/index/notice',
+                            path: "/index/notice",
                         },
                         {
                             title: "添加公告",
@@ -97,7 +98,7 @@ export default {
                     subMenus: [
                         {
                             title: "文档查询",
-                            path: '/index/downLoad',
+                            path: "/index/downLoad",
                         },
                         {
                             title: "上传文档",
@@ -111,11 +112,10 @@ export default {
 </script>
 
 <style>
-
-aside::before{
+aside::before {
     content: "";
     display: block;
-    height: 100%;
+    height: 92%;
     width: 300px;
     position: absolute;
     background-color: #f0f0f0;
