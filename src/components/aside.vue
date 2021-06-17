@@ -1,5 +1,12 @@
 <template>
-    <el-menu class="aside" unique-opened router>
+    <el-menu
+        class="aside"
+        unique-opened
+        router
+        background-color="#2A3542"
+        text-color="#ecf5ff"
+        active-text-color="#ffd04b"
+    >
         <el-submenu
             v-for="(menu, index) in menus"
             :key="menu.title"
@@ -50,6 +57,7 @@ export default {
                         },
                         {
                             title: "添加部门",
+                            path: "/index/departmentAdd",
                         },
                     ],
                 },
@@ -63,6 +71,7 @@ export default {
                         },
                         {
                             title: "添加职位",
+                            path: "/index/jobAdd",
                         },
                     ],
                 },
@@ -76,6 +85,7 @@ export default {
                         },
                         {
                             title: "添加员工",
+                            path: "/index/employeeAdd"
                         },
                     ],
                 },
@@ -89,6 +99,7 @@ export default {
                         },
                         {
                             title: "添加公告",
+                            path: "/index/noticeAdd"
                         },
                     ],
                 },
@@ -102,6 +113,7 @@ export default {
                         },
                         {
                             title: "上传文档",
+                            path: "/index/upLoad",
                         },
                     ],
                 },
@@ -118,6 +130,6 @@ aside::before {
     height: 92%;
     width: 300px;
     position: absolute;
-    background-color: #f0f0f0;
+    background-color: #2A3542;
 }
 </style>

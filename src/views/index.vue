@@ -1,6 +1,6 @@
 <template>
   <el-container>
-      <el-header>
+      <el-header class="header">
           <Header></Header>
       </el-header>
       <el-container>
@@ -26,4 +26,13 @@ export default {
 </script>
 
 <style>
+.header::before{
+    content: "";
+    display: block;
+    height: 60px;
+    width: 100%;
+    left: 0;
+    position: absolute;
+    background-color: #35404D;
+}
 </style>
