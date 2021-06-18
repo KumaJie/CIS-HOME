@@ -123,7 +123,6 @@ export default {
     },
 };
 </script>
-
 <style>
 aside::before {
     content: "";
