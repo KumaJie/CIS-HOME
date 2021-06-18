@@ -16,6 +16,7 @@ import upLoad from '@/views/document/upLoad.vue'
 import FaceRegister from '@/views/register/FaceRegister.vue'
 import Login from '@/views/login/Login.vue'
 import FaceLogin from '@/views/login/FaceLogin';
+import Password from '@/views/password/Password.vue';
 Vue.use(VueRouter)
 
 const routes = [{
@@ -73,6 +74,10 @@ const routes = [{
   {
     path: '/faceLogin',
     component: FaceLogin
+  },
+  {
+    path: "/password",
+    component: Password
   }
 ]
 

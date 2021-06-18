@@ -7,7 +7,7 @@
         <el-col :span="2">欢迎登陆</el-col>
         <el-col :span="2">{{nowDate}}</el-col>
         <el-col :span="2">
-            <el-link icon="el-icon-setting" :underline="false" type="primary"
+            <el-link icon="el-icon-setting" :underline="false" type="primary" href="/password"
                 >修改密码</el-link
             >
         </el-col>
@@ -31,7 +31,7 @@ export default {
         nowDate(){
             return new Date().toLocaleDateString()
         }
-    }
+    },
 };
 </script>
 
