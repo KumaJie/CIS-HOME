@@ -1,7 +1,7 @@
 <template>
     <el-form
         :model="formData"
-        label-position="left"
+        label-position="right"
         label-width="100px"
     >
         <el-row>
@@ -137,8 +137,8 @@
             ></el-col>
         </el-row>
         <el-form-item>
-            <el-button>搜索</el-button>
-            <el-button>删除</el-button>
+            <el-button type="primary">搜索</el-button>
+            <el-button type="danger">删除</el-button>
         </el-form-item>
     </el-form>
 </template>
