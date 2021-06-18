@@ -1,6 +1,7 @@
 <template>
     <el-menu
         class="aside"
+        style="margin-left:70px"
         unique-opened
         router
         background-color="#2A3542"
@@ -122,7 +123,6 @@ export default {
     },
 };
 </script>
-
 <style>
 aside::before {
     content: "";

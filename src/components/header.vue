@@ -1,9 +1,9 @@
 <template>
     <el-row style="line-height: 60px; color: #ecf5ff">
-        <el-col :span="3">
+        <el-col :span="2">
             <div class="title-icon"></div>
         </el-col>
-        <el-col :span="9">员工之家</el-col>
+        <el-col :span="10">员工之家</el-col>
         <el-col :span="2">欢迎登陆</el-col>
         <el-col :span="2">{{nowDate}}</el-col>
         <el-col :span="2">
@@ -37,12 +37,16 @@ export default {
 
 <style>
 .title-icon::before{
-    content: "1";
+    content: "";
     display: block;
     width: 100%;
     height: 100%;
-    background-image: url("https://s4.aconvert.com/convert/p3r68-cdx67/aig89-xzv7a.png");
+    background-image: url("https://img1.baidu.com/it/u=3271466112,2989683044&fm=26&fmt=auto&gp=0.jpg");
     background-position: center center;
-    background-size: 100% 100%;
+    background-size: 60% 60%;
+    background-repeat: no-repeat;
+}
+.title-icon{
+    height: 60px;
 }
 </style>
