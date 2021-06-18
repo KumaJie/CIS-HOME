@@ -10,7 +10,7 @@
           <el-input type="password" v-model="formInline.password" placeholder="密码"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">登录</el-button>
+          <el-button type="primary" @click="login">登录</el-button>
           <el-button type="primary" @click="faceLogin">刷脸</el-button>
         </el-form-item>
       </el-form>
@@ -30,13 +30,18 @@ export default {
     };
   },
   methods: {
-    onSubmit() {
+    login() {
       console.log("submit!");
+      this.$router.replace({ path: '/index' })
     },
     faceLogin() {
       this.$router.push({ path: '/faceLogin' })
     }
-  }
+  },
+  beforeRouteEnter(to, from, next) {
+    console.log("需要初始化");
+    next();
+  },
 };
 </script>
 

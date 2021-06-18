@@ -12,14 +12,15 @@
             >
         </el-col>
         <el-col :span="2"
-            ><el-link icon="el-icon-setting" :underline="false" type="primary"
+            ><el-link icon="el-icon-setting" :underline="false" type="primary" href="/faceRegister"
                 >人脸注册</el-link
             ></el-col
         >
         <el-col :span="2"
-            ><el-link icon="el-icon-setting" :underline="false" type="primary"
+            ><el-link icon="el-icon-setting" :underline="false" type="primary" href="/login"
                 >退出登录</el-link
-            ></el-col
+            >
+            </el-col
         >
     </el-row>
 </template>
