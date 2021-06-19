@@ -4,7 +4,7 @@
             <div class="title-icon"></div>
         </el-col>
         <el-col :span="10">员工之家</el-col>
-        <el-col :span="2">欢迎登陆</el-col>
+        <el-col :span="3">欢迎登陆 {{userName}}</el-col>
         <el-col :span="2">{{nowDate}}</el-col>
         <el-col :span="2">
             <el-link icon="el-icon-setting" :underline="false" type="primary" href="/password"
@@ -26,8 +26,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
     computed:{
+        ...mapGetters(['userName']),
         nowDate(){
             return new Date().toLocaleDateString()
         }

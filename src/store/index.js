@@ -22,6 +22,9 @@ export default new Vuex.Store({
     },
     employeeId: state => {
       return state.userInfo && state.userInfo.employeeId;
+    },
+    userName: state => {
+      return state.userInfo && state.userInfo.userName;
     }
   }
 })
