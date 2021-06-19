@@ -17,6 +17,7 @@ import FaceRegister from '@/views/register/FaceRegister.vue'
 import Login from '@/views/login/Login.vue'
 import FaceLogin from '@/views/login/FaceLogin';
 import Password from '@/views/password/Password.vue';
+import Home from '@/views/Home.vue';
 Vue.use(VueRouter)
 
 const routes = [{
@@ -24,8 +25,12 @@ const routes = [{
     redirect: "/login"
   }, {
     path: '/index',
+    redirect: '/index/home',
     component: index,
     children: [{
+        path: 'home',
+        component: Home
+      }, {
         path: 'user',
         component: user
       }, {
