@@ -32,7 +32,20 @@ export default {
   methods: {
     login() {
       console.log("submit!");
-      this.$router.replace({ path: '/index' })
+      // this.$router.replace({ path: '/index' })
+      this.$http({
+        url: "http://localhost:8080/login",
+        method: 'POST',
+        data: this.formInline
+      }).then(res => {
+        const data = res.data;
+        if ((data.status >= 200 && data.status < 300) || data.status === 304 ) {
+          console.log(data);
+          this.$message({ type: 'success', message: '登录成功' });
+        } else {
+          this.$message({ type: 'warning', message: data.message })
+        }
+      })
     },
     faceLogin() {
       this.$router.push({ path: '/faceLogin' })

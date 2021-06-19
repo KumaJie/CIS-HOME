@@ -1,7 +1,6 @@
 <template>
   <div class="face-container">
-
-    <el-card class="face-card" :body-style="{ padding: '0px' }">
+    <div class="face-card">
       <div class="camera_outer">
         <video
           ref="videoCamera"
@@ -19,9 +18,11 @@
         <div v-if="imgSrc" class="img_bg_camera">
           <img :src="imgSrc" alt="" class="tx_img" />
         </div>
-        <!-- <el-button @click="setImage()"></el-button> -->
       </div>
-    </el-card>
+    </div>
+    <div class="btn-wrap">
+      <el-button @click="login">刷脸</el-button>
+    </div>
   </div>
 </template>
 
@@ -103,7 +104,7 @@ export default {
     },
     //  绘制图片（拍照功能）
 
-    setImage() {
+    getImage() {
       var _this = this;
       // 点击，canvas画图
       _this.thisContext.drawImage(
@@ -115,8 +116,9 @@ export default {
       );
       // 获取图片base64链接
       var image = this.thisCancas.toDataURL("image/png");
-      _this.imgSrc = image;
-      this.$emit("refreshDataList", this.imgSrc);
+      // _this.imgSrc = image;
+      return image;
+      // this.$emit("refreshDataList", this.imgSrc);
     },
     // base64转文件
 
@@ -135,6 +137,20 @@ export default {
 
     stopNavigator() {
       this.thisVideo.srcObject.getTracks()[0].stop();
+    },
+
+    login() {
+      const dataUrl = this.getImage();
+      // console.log(dataUrl);
+      this.$http({
+        method: 'POST',
+        url: 'http://localhost:8080/face_login',
+        data: {
+          base64Image: dataUrl
+        },
+      }).then(res => {
+        console.log(res);
+      })
     }
   }
 };
@@ -146,10 +162,24 @@ export default {
   height: 100vh;
   box-sizing: border-box;
   background-color: #eee;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   overflow: hidden;
 }
 .face-card {
+  border: 2px solid #ddd;
   width: 300px;
-  margin: 100px auto 0 auto;
+  padding: 10px;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+video,
+.camera_outer {
+  border-radius: 50%;
+}
+.btn-wrap {
+  margin-top: 10px;
+  text-align: center;
 }
 </style>
