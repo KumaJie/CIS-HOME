@@ -31,8 +31,6 @@ export default {
   },
   methods: {
     login() {
-      console.log("submit!");
-      // this.$router.replace({ path: '/index' })
       this.$http({
         url: "http://localhost:8080/login",
         method: 'POST',
@@ -40,7 +38,6 @@ export default {
       }).then(res => {
         const data = res.data;
         if ((data.status >= 200 && data.status < 300) || data.status === 304 ) {
-          console.log(data);
           this.$store.commit('initUserInfo', data.data);
           this.$message({ type: 'success', message: '登录成功' });
           const that = this;
@@ -57,8 +54,9 @@ export default {
     }
   },
   beforeRouteEnter(to, from, next) {
-    console.log("需要初始化");
-    next();
+    next(vm => {
+      vm.$store.commit('initUserInfo', null);
+    });
   },
 };
 </script>
