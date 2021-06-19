@@ -29,8 +29,8 @@
                 </el-select>
             </el-form-item>
             <el-form-item>
-                <el-button>搜索</el-button>
-                <el-button>删除</el-button>
+                <el-button @click="search">搜索</el-button>
+                <el-button @click="del">删除</el-button>
             </el-form-item>
         </el-form>
         <el-table
@@ -148,7 +148,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="submit">确 定</el-button>
+                <el-button type="primary" @click="submitEdit">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -158,14 +158,7 @@
 export default {
     data() {
         return {
-            formData: {
-                employeeName: "",
-                sex: "",
-                tel: "",
-                jobName: "",
-                cardId: "",
-                deptName: "",
-            },
+            formData: {},
             talbeData: [
                 {
                     employeeName: "张三",
@@ -205,17 +198,17 @@ export default {
                 },
             ],
             editTable: {},
-            selectTable: [],
+            selectedTable: [],
             dialogVisible: false,
         };
     },
     methods: {
-        getList(page) {
+        getList(page = 1) {
             this.$http
                 .get("listEmployee", {
-                    params:{
+                    params: {
                         page,
-                    }
+                    },
                 })
                 .then((res) => {
                     this.talbeData = res.data.data;
@@ -225,18 +218,43 @@ export default {
             this.editTable = detailInfo;
             this.dialogVisible = true;
         },
-        submit() {
+        del() {
+            let ids = [];
+            this.selectedTable.forEach((val) => {
+                ids.push(val.employeeId);
+            });
+            this.$http
+                .post("deleteEmployee", {
+                    ids,
+                })
+                .then((res) => {
+                    this.getList()
+                });
+        },
+        submitEdit() {
+            this.$http.post("modifyEmployee", this.editTable).then((res) => {
+                this.getList();
+            });
             this.dialogVisible = false;
         },
         handleSelectionChange(selected) {
-            this.selectTable = selected;
+            this.selectedTable = selected;
         },
-        changePage(page){
-            this.getList(page)
-        }
+        changePage(page) {
+            this.getList(page);
+        },
+        search() {
+            this.$http
+                .get("listEmployee", {
+                    params: this.formData,
+                })
+                .then((res) => {
+                    this.talbeData = res.data.data;
+                });
+        },
     },
     mounted() {
-        this.getList(1);
+        this.getList();
     },
 };
 </script>
