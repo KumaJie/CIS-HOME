@@ -15,8 +15,8 @@
             </el-form-item>
             <el-form-item label="性别">
                 <el-select v-model="formData.sex">
-                    <el-option label="男" value="0"></el-option>
-                    <el-option label="女" value="1"></el-option>
+                    <el-option label="男" value="1"></el-option>
+                    <el-option label="女" value="2"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="手机">
@@ -64,7 +64,12 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-pagination background layout="prev, pager, next" :total="50">
+        <el-pagination
+            background
+            layout="prev, pager, next"
+            :total="50"
+            @current-change="changePage"
+        >
         </el-pagination>
         <el-dialog :visible.sync="dialogVisible">
             <el-form
@@ -205,6 +210,17 @@ export default {
         };
     },
     methods: {
+        getList(page) {
+            this.$http
+                .get("listEmployee", {
+                    params:{
+                        page,
+                    }
+                })
+                .then((res) => {
+                    this.talbeData = res.data.data;
+                });
+        },
         edit(detailInfo) {
             this.editTable = detailInfo;
             this.dialogVisible = true;
@@ -215,6 +231,12 @@ export default {
         handleSelectionChange(selected) {
             this.selectTable = selected;
         },
+        changePage(page){
+            this.getList(page)
+        }
+    },
+    mounted() {
+        this.getList(1);
     },
 };
 </script>
