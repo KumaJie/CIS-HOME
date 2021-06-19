@@ -152,6 +152,12 @@ export default {
         console.log(res);
       })
     }
+  },
+  beforeDestroy() {
+    this.stopNavigator();
+    this.thisCancas = null,
+    this.thisContext = null,
+    this.thisVideo = null
   }
 };
 </script>
