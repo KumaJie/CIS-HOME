@@ -14,14 +14,10 @@
           :width="videoWidth"
           :height="videoHeight"
         ></canvas>
-
-        <div v-if="imgSrc" class="img_bg_camera">
-          <img :src="imgSrc" alt="" class="tx_img" />
-        </div>
       </div>
     </div>
     <div class="btn-wrap">
-      <el-button @click="login">刷脸</el-button>
+      <el-button @click="login" v-loading.fullscreen.lock="fullscreenLoading">刷脸</el-button>
     </div>
   </div>
 </template>
@@ -36,7 +32,8 @@ export default {
       imgSrc: "",
       thisCancas: null,
       thisContext: null,
-      thisVideo: null
+      thisVideo: null,
+      fullscreenLoading: false,
     };
   },
   mounted() {
@@ -140,16 +137,31 @@ export default {
     },
 
     login() {
+      this.fullscreenLoading = true;
       const dataUrl = this.getImage();
-      // console.log(dataUrl);
+      const file = this.dataURLtoFile(dataUrl, 'face.png');
+      const formData = new FormData();
+      formData.append('faceImage', file);
       this.$http({
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
         method: 'POST',
         url: 'http://localhost:8080/face_login',
-        data: {
-          base64Image: dataUrl
-        },
+        data: formData
       }).then(res => {
-        console.log(res);
+        this.fullscreenLoading = false;
+        const data = res.data;
+        if ((data.status >= 200 && data.status < 300) || data.status === 304 ) {
+          this.$store.commit('initUserInfo', data.data)
+          this.$message({ type: 'success', message: "登录成功" });
+          const that = this;
+          setTimeout(() => {
+            that.$router.replace({ path: '/index' })
+          }, 1500)
+        } else {
+          this.$message({ type: 'warning', message: data.message })
+        }
       })
     }
   },
