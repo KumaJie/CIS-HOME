@@ -7,7 +7,7 @@
           <el-aside>
               <Aside></Aside>
           </el-aside>
-          <el-main>
+          <el-main style="height: 700px">
               <router-view/>
           </el-main>
       </el-container>

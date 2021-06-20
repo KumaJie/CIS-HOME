@@ -1,9 +1,5 @@
 <template>
-    <el-form
-        :model="formData"
-        label-position="left"
-        label-width="100px"
-    >
+    <el-form :model="formData" label-position="right" label-width="100px">
         <el-row>
             <el-col :span="10"
                 ><el-form-item label="姓名">
@@ -23,19 +19,15 @@
             <el-col :span="10"
                 ><el-form-item label="性别">
                     <el-select v-model="formData.sex">
-                        <el-option label="男" value="0"></el-option>
-                        <el-option label="女" value="1"></el-option>
+                        <el-option label="男" value="1"></el-option>
+                        <el-option label="女" value="2"></el-option>
                     </el-select> </el-form-item
             ></el-col>
             <el-col :span="10" :offset="2"
                 ><el-form-item label="职位">
-                    <el-select v-model="formData.jobName">
+                    <el-select v-model="formData.jobId">
                         <el-option
                             label="java中级开发工程师"
-                            value="0"
-                        ></el-option>
-                        <el-option
-                            label="java高级开发工程师"
                             value="1"
                         ></el-option>
                     </el-select> </el-form-item
@@ -98,9 +90,12 @@
         <el-row>
             <el-col :span="10"
                 ><el-form-item label="出生日期">
-                    <el-input
+                    <el-date-picker
                         v-model="formData.birthday"
-                    ></el-input> </el-form-item
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                    >
+                    </el-date-picker> </el-form-item
             ></el-col>
             <el-col :span="10" :offset="2"
                 ><el-form-item label="民族">
@@ -130,15 +125,13 @@
             ></el-col>
             <el-col :span="10" :offset="2"
                 ><el-form-item label="所属部门">
-                    <el-select v-model="formData.deptName">
-                        <el-option label="研发部" value="0"></el-option>
+                    <el-select v-model="formData.deptId">
                         <el-option label="营销部" value="1"></el-option>
                     </el-select> </el-form-item
             ></el-col>
         </el-row>
         <el-form-item>
-            <el-button>搜索</el-button>
-            <el-button>删除</el-button>
+            <el-button type="primary" @click="onSubmit">添加</el-button>
         </el-form-item>
     </el-form>
 </template>
@@ -151,7 +144,7 @@ export default {
                 employeeName: "",
                 cardId: "",
                 sex: "",
-                jobName: "",
+                jobId: "",
                 education: "",
                 email: "",
                 tel: "",
@@ -165,9 +158,16 @@ export default {
                 speciality: "",
                 hobby: "",
                 remark: "",
-                deptName: "",
+                deptId: "",
             },
         };
+    },
+    methods: {
+        onSubmit() {
+            this.$http.post("insertEmployee", this.formData).then((res) => {
+                console.log(res);
+            });
+        },
     },
 };
 </script>
