@@ -203,7 +203,10 @@ export default {
     handleSelectionChange(selected) {
       this.selectedTable = selected;
     }
-  }
+  },
+  mounted() {
+    this.select();
+  },
 };
 </script>
 
