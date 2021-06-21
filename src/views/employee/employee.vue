@@ -29,7 +29,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item>
-                <el-button @click="search">搜索</el-button>
+                <el-button @click="search(1)">搜索</el-button>
                 <el-button @click="del">删除</el-button>
             </el-form-item>
         </el-form>
@@ -211,9 +211,9 @@ export default {
                     },
                 })
                 .then((res) => {
-                    res.data.data.forEach((val)=>{
-                        val.sex = val.sex == 1 ? "男":"女"
-                    })
+                    res.data.data.forEach((val) => {
+                        val.sex = val.sex == 1 ? "男" : "女";
+                    });
                     this.talbeData = res.data.data;
                 });
         },
@@ -231,7 +231,7 @@ export default {
                     ids,
                 })
                 .then((res) => {
-                    this.getList()
+                    this.getList();
                 });
         },
         submitEdit() {
@@ -246,15 +246,18 @@ export default {
         changePage(page) {
             this.getList(page);
         },
-        search() {
+        search(page = 1) {
             this.$http
                 .get("listEmployee", {
-                    params: this.formData,
+                    params: {
+                        page,
+                        ...this.formData,
+                    },
                 })
                 .then((res) => {
-                    res.data.data.forEach((val)=>{
-                        val.sex = val.sex == 1 ? "男":"女"
-                    })
+                    res.data.data.forEach((val) => {
+                        val.sex = val.sex == 1 ? "男" : "女";
+                    });
                     this.talbeData = res.data.data;
                 });
         },
