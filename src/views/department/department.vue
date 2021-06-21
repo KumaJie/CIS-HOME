@@ -18,14 +18,18 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" size="small" @click="deleteDept"
+          <el-button type="primary" size="small" @click="deleteListDept"
             >删除</el-button
           >
         </el-form-item>
       </el-form>
     </div>
 
-    <el-table :data="talbeData" border>
+    <el-table
+      :data="talbeData"
+      border
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection"> </el-table-column>
       <el-table-column label="部门名称" prop="deptName"> </el-table-column>
       <el-table-column label="详细信息" prop="deptRemark"> </el-table-column>
@@ -34,7 +38,7 @@
           <el-button type="primary" size="small" @click="handleEdit(scope.row)"
             >编辑</el-button
           >
-          <el-button type="danger" size="small" @click="deleteDept(scope.row)"
+          <el-button type="danger" size="small" @click="deleteSingleDept(scope.row)"
             >删除</el-button
           >
         </template>
@@ -76,7 +80,8 @@ export default {
         deptRemark: ""
       },
       updateItemId: null,
-      talbeData: []
+      talbeData: [],
+      selectedTable: []
     };
   },
   methods: {
@@ -127,8 +132,8 @@ export default {
       });
     },
 
-    deleteDept(detailInfo) {
-      this.$confirm("此操作将永久删除该部门信息, 是否继续?", "提示", {
+    deleteSingleDept(detailInfo) {
+      this.$confirm(`此操作将永久删除${detailInfo.deptName}信息, 是否继续？`, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -155,6 +160,48 @@ export default {
             message: "已取消!"
           });
         });
+    },
+
+    deleteListDept() {
+      this.$confirm("此操作将永久删除所选部门信息, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let ids = [];
+          this.selectedTable.forEach(val => {
+            ids.push(val.deptId);
+          });
+          this.$http({
+            url: "/deleteDept",
+            method: "POST",
+            data: {
+              ids,
+            }
+          }).then(res => {
+            const data = res.data;
+						if ((data.status >= 200 && data.status < 300) || data.status === 304) {
+							this.$message({
+								type: "success",
+								message: "删除成功!"
+							});
+						} else {
+							this.$message({ type: 'warning', message: data.message })
+						}
+            this.select();
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消!"
+          });
+        });
+    },
+
+    handleSelectionChange(selected) {
+      this.selectedTable = selected;
     }
   }
 };
