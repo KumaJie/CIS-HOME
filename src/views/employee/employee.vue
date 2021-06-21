@@ -39,8 +39,8 @@
             @selection-change="handleSelectionChange"
             style="margin-bottom: 20px"
         >
-            <el-table-column type="selection"></el-table-column>
-            <el-table-column label="姓名" prop="employeeName">
+            <el-table-column type="selection" fixed="left"></el-table-column>
+            <el-table-column label="姓名" prop="employeeName" fixed="left">
             </el-table-column>
             <el-table-column label="性别" prop="sex"> </el-table-column>
             <el-table-column label="手机号码" prop="tel"> </el-table-column>
@@ -53,7 +53,7 @@
             <el-table-column label="联系地址" prop="address"> </el-table-column>
             <el-table-column label="建档日期" prop="employeeCreate">
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" fixed="right">
                 <template slot-scope="scope">
                     <el-button
                         type="danger"
