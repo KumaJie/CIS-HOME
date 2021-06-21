@@ -211,6 +211,9 @@ export default {
                     },
                 })
                 .then((res) => {
+                    res.data.data.forEach((val)=>{
+                        val.sex = val.sex == 1 ? "男":"女"
+                    })
                     this.talbeData = res.data.data;
                 });
         },
@@ -249,6 +252,9 @@ export default {
                     params: this.formData,
                 })
                 .then((res) => {
+                    res.data.data.forEach((val)=>{
+                        val.sex = val.sex == 1 ? "男":"女"
+                    })
                     this.talbeData = res.data.data;
                 });
         },
