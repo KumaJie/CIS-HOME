@@ -31,6 +31,7 @@
       </el-table-column>
     </el-table>
 
+<!-- 页面跳转 -->
     <div>
       <el-pagination
         @size-change="handleSizeChange"
@@ -73,12 +74,6 @@
       width="30%"
       :before-close="handleClose">
       <span>{{preView}}</span>
-      <!-- <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false"
-          >确 定</el-button
-        >
-      </span> -->
     </el-dialog>
   </div>
 </template>
@@ -95,6 +90,12 @@ export default {
           noticeCreate: "dfdf",
           userId: "45",
         },
+        {
+          noticeTitle: "徐家乐",
+          noticeContent: "徐家乐是帅哥",
+          noticeCreate: "222",
+          userId: "46",
+        }
       ],
       currentPage: 4,
       notice: {
@@ -125,11 +126,6 @@ export default {
       console.log(detailInfo);
       this.dialogSeakVisible=true;
       this.preView = detailInfo.noticeContent
-    //   this.$confirm('确认关闭？')
-    //       .then(_ => {
-    //         done();
-    //       })
-    //       .catch(_ => {});
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
