@@ -19,14 +19,24 @@ export default {
     data() {
       return {
         addDeptForm: {
-          deptName: '',
-          deptRemark: '',
-        }
+			deptName: '',
+			deptRemark: '',
+		}
       }
     },
     methods: {
       addDept() {
-        console.log('添加部门!');
+		  this.$http({
+			  url: "http://localhost:8080/addDept",
+			  method: "POST",
+			  data: {
+				  deptName: this.addDeptForm.deptName,
+				  deptRemark: this.addDeptForm.deptRemark,
+			  }
+		  }).then(res => {
+				const data = res.data;
+					this.$message({ type: 'warning', message: data.message })
+			})
       }
     }
   }
