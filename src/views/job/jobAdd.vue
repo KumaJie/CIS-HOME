@@ -7,7 +7,7 @@
 
             <el-form-item label="详细描述：">
                 <el-input v-model="formInline.jobRemark"></el-input>
-            </el-form-item>  
+            </el-form-item>
         </el-form>
 
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
@@ -18,34 +18,35 @@
                 <el-button type="primary" @click="onSubmit">取消</el-button>
             </el-form-item>
         </el-form>
-
-
     </div>
 </template>
 
 <script>
-  export default {
+export default {
     data() {
-      return {
-        formInline: {
-          jobName: '',
-          jobRemark: ''
-        }
-      }
+        return {
+            formInline: {
+                jobName: "",
+                jobRemark: "",
+            },
+        };
     },
     methods: {
-      onSubmit() {
-        console.log('submit!');
-      },
-      onAdd() {
-        this.$http.post("/AddJob", {
-            jobName: this.formInline.jobName,
-            jobRemark: this.formInline.jobRemark
-        }).then(res => {
-          const data = res.data;
-          this.$message({ type: 'info', message: data.message })
-        })
-      }
-    }
-  }
+        onSubmit() {
+            console.log("submit!");
+        },
+        onAdd() {
+            this.$http
+                .post("/AddJob", {
+                    jobName: this.formInline.jobName,
+                    jobRemark: this.formInline.jobRemark,
+                })
+                .then((res) => {
+                    const data = res.data;
+                    this.$message({ type: "success", message: data.message });
+                    this.formInline = {};
+                });
+        },
+    },
+};
 </script>

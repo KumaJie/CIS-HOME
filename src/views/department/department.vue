@@ -12,7 +12,7 @@
                 </el-form-item>
 
                 <el-form-item>
-                    <el-button type="primary" size="small" @click="select"
+                    <el-button type="primary" size="small" @click="select(1)"
                         >查询</el-button
                     >
                 </el-form-item>
@@ -29,6 +29,7 @@
             :data="talbeData"
             border
             @selection-change="handleSelectionChange"
+            style="margin-bottom: 20px"
         >
             <el-table-column type="selection"> </el-table-column>
             <el-table-column label="部门名称" prop="deptName">
@@ -52,7 +53,13 @@
                 </template>
             </el-table-column>
         </el-table>
-
+        <el-pagination
+            background
+            layout="prev, pager, next"
+            :total="50"
+            @current-change="changePage"
+        >
+        </el-pagination>
         <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
             <span>
                 <el-form ref="form" :model="editForm" label-width="80px">
@@ -86,18 +93,21 @@ export default {
                 deptName: "",
                 deptRemark: "",
             },
-            updateItemId: null,
             talbeData: [],
             // 被选中的表行
             selectedTable: [],
         };
     },
     methods: {
-        select() {
+        changePage(page){
+            this.select(page)
+        },
+        select(page = 1) {
             this.$http({
                 url: "getDept",
                 method: "GET",
                 params: {
+                    page,
                     deptName: this.selectForm.deptName,
                 },
             }).then((res) => {
@@ -115,7 +125,7 @@ export default {
 
         handleEdit(item) {
             this.dialogVisible = true;
-            this.updateItemId = item.deptId;
+            this.editForm = item;
         },
 
         edit() {
@@ -133,11 +143,7 @@ export default {
             this.$http({
                 url: "updateDept",
                 method: "POST",
-                data: {
-                    deptId: this.updateItemId,
-                    deptName: this.editForm.deptName,
-                    deptRemark: this.editForm.deptRemark,
-                },
+                data: this.editForm,
             }).then((res) => {
                 const data = res.data;
                 this.dialogVisible = false;
@@ -193,9 +199,12 @@ export default {
                     this.select();
                 });
         },
-        handleSelectionChange() {
+        handleSelectionChange(selected) {
             this.selectedTable = selected;
         },
+    },
+    mounted() {
+        this.select();
     },
 };
 </script>

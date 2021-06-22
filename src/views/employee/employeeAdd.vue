@@ -166,6 +166,12 @@ export default {
         onSubmit() {
             this.$http.post("insertEmployee", this.formData).then((res) => {
                 console.log(res);
+                if(res.data.status === 200){
+                    this.$message({
+                        message: "添加成功",
+                        type: "success"
+                    })
+                }
             });
         },
     },
