@@ -5,8 +5,12 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    breadcrumbPath:{}
   },
   mutations: {
+    changePath(state, payLoad){
+      state.breadcrumbPath = payLoad
+    }
   },
   actions: {
   },

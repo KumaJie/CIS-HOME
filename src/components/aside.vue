@@ -1,12 +1,13 @@
 <template>
     <el-menu
         class="aside"
-        style="margin-left:70px"
+        style="margin-left: 70px"
         unique-opened
         router
         background-color="#2A3542"
         text-color="#ecf5ff"
         active-text-color="#ffd04b"
+        @select="select"
     >
         <el-submenu
             v-for="(menu, index) in menus"
@@ -36,7 +37,7 @@ export default {
             menus: [
                 {
                     title: "用户管理",
-                    icon: "el-icon-setting",
+                    icon: "el-icon-user",
                     subMenus: [
                         {
                             title: "用户查询",
@@ -50,7 +51,7 @@ export default {
                 },
                 {
                     title: "部门管理",
-                    icon: "el-icon-setting",
+                    icon: "el-icon-s-cooperation",
                     subMenus: [
                         {
                             title: "部门查询",
@@ -64,7 +65,7 @@ export default {
                 },
                 {
                     title: "职位管理",
-                    icon: "el-icon-setting",
+                    icon: "el-icon-s-order",
                     subMenus: [
                         {
                             title: "职位查询",
@@ -78,7 +79,7 @@ export default {
                 },
                 {
                     title: "员工管理",
-                    icon: "el-icon-setting",
+                    icon: "el-icon-s-custom",
                     subMenus: [
                         {
                             title: "员工查询",
@@ -86,13 +87,13 @@ export default {
                         },
                         {
                             title: "添加员工",
-                            path: "/index/employeeAdd"
+                            path: "/index/employeeAdd",
                         },
                     ],
                 },
                 {
                     title: "公告管理",
-                    icon: "el-icon-setting",
+                    icon: "el-icon-date",
                     subMenus: [
                         {
                             title: "公告查询",
@@ -100,13 +101,13 @@ export default {
                         },
                         {
                             title: "添加公告",
-                            path: "/index/noticeAdd"
+                            path: "/index/noticeAdd",
                         },
                     ],
                 },
                 {
                     title: "下载中心",
-                    icon: "el-icon-setting",
+                    icon: "el-icon-document",
                     subMenus: [
                         {
                             title: "文档查询",
@@ -121,6 +122,15 @@ export default {
             ],
         };
     },
+    methods: {
+        select(index, indexPath) {
+            let breadcrumb = {
+                url: index,
+                path: this.menus[indexPath[0]],
+            };
+            this.$store.commit("changePath", breadcrumb);
+        },
+    },
 };
 </script>
 <style>
@@ -130,6 +140,6 @@ aside::before {
     height: 92%;
     width: 300px;
     position: absolute;
-    background-color: #2A3542;
+    background-color: #2a3542;
 }
 </style>
