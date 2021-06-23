@@ -10,7 +10,7 @@
           <el-input type="password" v-model="formInline.password" placeholder="密码"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">登录</el-button>
+          <el-button type="primary" @click="login">登录</el-button>
           <el-button type="primary" @click="faceLogin">刷脸</el-button>
         </el-form-item>
       </el-form>
@@ -19,6 +19,8 @@
 </template>
 
 <script>
+import { setTokenToStorage } from '@/utils/storage';
+
 export default {
   name: "Login",
   data() {
@@ -30,13 +32,35 @@ export default {
     };
   },
   methods: {
-    onSubmit() {
-      console.log("submit!");
+    login() {
+      this.$http({
+        url: "http://localhost:8080/login",
+        method: 'POST',
+        data: this.formInline
+      }).then(res => {
+        const data = res.data;
+        if ((data.status >= 200 && data.status < 300) || data.status === 304 ) {
+          this.$store.commit('initUserInfo', data.data.user);
+          setTokenToStorage(data.data.token);
+          this.$message({ type: 'success', message: '登录成功' });
+          const that = this;
+          setTimeout(() => {
+            that.$router.replace({ path: '/index' })
+          }, 1500)
+        } else {
+          this.$message({ type: 'warning', message: data.message })
+        }
+      })
     },
     faceLogin() {
       this.$router.push({ path: '/faceLogin' })
     }
-  }
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.$store.commit('initUserInfo', null);
+    });
+  },
 };
 </script>
 

@@ -3,8 +3,7 @@
         <el-form :model="formData" :inline="true">
             <el-form-item label="职位">
                 <el-select v-model="formData.jobName">
-                    <el-option label="java中级开发工程师" value="0"></el-option>
-                    <el-option label="java高级开发工程师" value="1"></el-option>
+                    <el-option v-for="item in jobNameAndIds" :key="item.jobName" :label="item.jobName" :value="item.jobId" />
                 </el-select>
             </el-form-item>
             <el-form-item label="姓名">
@@ -24,8 +23,7 @@
             </el-form-item>
             <el-form-item label="所属部门">
                 <el-select v-model="formData.deptName">
-                    <el-option label="研发部" value="0"></el-option>
-                    <el-option label="营销部" value="1"></el-option>
+                    <el-option v-for="item in deptNameAndIds" :key="item.deptName" :label="item.deptName" :value="item.deptId" />
                 </el-select>
             </el-form-item>
             <el-form-item>
@@ -39,8 +37,8 @@
             @selection-change="handleSelectionChange"
             style="margin-bottom: 20px"
         >
-            <el-table-column type="selection"></el-table-column>
-            <el-table-column label="姓名" prop="employeeName">
+            <el-table-column type="selection" fixed="left"></el-table-column>
+            <el-table-column label="姓名" prop="employeeName" fixed="left">
             </el-table-column>
             <el-table-column label="性别" prop="sex"> </el-table-column>
             <el-table-column label="手机号码" prop="tel"> </el-table-column>
@@ -53,7 +51,7 @@
             <el-table-column label="联系地址" prop="address"> </el-table-column>
             <el-table-column label="建档日期" prop="employeeCreate">
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" fixed="right">
                 <template slot-scope="scope">
                     <el-button
                         type="danger"
@@ -155,10 +153,20 @@
 </template>
 
 <script>
+import {settingMixin} from './settingMixin';
+
 export default {
+    mixins: [settingMixin],
     data() {
         return {
-            formData: {},
+            formData: {
+                jobName: '',
+                employeeName: '',
+                cardId: '',
+                sex: '',
+                tel: '',
+                deptName: '',
+            },
             talbeData: [
                 {
                     employeeName: "张三",
