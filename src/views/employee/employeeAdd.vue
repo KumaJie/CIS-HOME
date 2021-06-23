@@ -122,7 +122,6 @@
 <script>
 import { settingMixin } from "./settingMixin";
 export default {
-<<<<<<< HEAD
     data() {
         return {
             formData: {
@@ -160,40 +159,6 @@ export default {
             });
         },
     },
-=======
-  mixins: [settingMixin],
-  data() {
-    return {
-      formData: {
-        employeeName: "",
-        cardId: "",
-        sex: "",
-        jobId: "",
-        education: "",
-        email: "",
-        tel: "",
-        phone: "",
-        party: "",
-        qqNum: "",
-        address: "",
-        postCard: "",
-        birthday: "",
-        race: "",
-        speciality: "",
-        hobby: "",
-        remark: "",
-        deptId: ""
-      }
-    };
-  },
-  methods: {
-    onSubmit() {
-      this.$http.post("insertEmployee", this.formData).then(res => {
-        console.log(res);
-      });
-    }
-  }
->>>>>>> dev
 };
 </script>
 

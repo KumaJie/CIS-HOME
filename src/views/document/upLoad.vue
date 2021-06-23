@@ -18,6 +18,7 @@
         class="upload-demo"
         action="http://localhost:8080/addDocs"
         :data="formData"
+        :headers="headers"
         ref="upLoad"
         :limit="1"
         :auto-upload="false"
@@ -38,6 +39,7 @@
   </el-form>
 </template>
 <script>
+import { getTokenFromStorage } from '@/utils/storage';
 export default {
   data() {
     return {
@@ -46,6 +48,9 @@ export default {
         documentName: "",
         documentRemark: "",
         userId: 0,
+      },
+      headers:{
+        Authorization: getTokenFromStorage()
       },
       flag: false,
       fileList: [],

@@ -66,6 +66,7 @@
             class="upload-demo"
             action="http://localhost:8080/updateDocs"
             :data="formData"
+            :headers="headers"
             ref="upLoad"
             :auto-upload="false"
             :on-change="fileChange"
@@ -85,6 +86,7 @@
 </template>
 
 <script>
+import { getTokenFromStorage } from '@/utils/storage';
 export default {
   data() {
     return {
@@ -95,6 +97,9 @@ export default {
       fileList: [],
       multipleSelection: [], //存放已选择的数据
       dialogFormVisible: false,
+      headers:{
+        Authorization: getTokenFromStorage()
+      }
     };
   },
   methods: {
