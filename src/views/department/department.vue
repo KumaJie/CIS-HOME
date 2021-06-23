@@ -29,6 +29,7 @@
       :data="talbeData"
       border
       @selection-change="handleSelectionChange"
+      style="margin-bottom: 20px"
     >
       <el-table-column type="selection"> </el-table-column>
       <el-table-column label="部门名称" prop="deptName"> </el-table-column>
@@ -38,13 +39,22 @@
           <el-button type="primary" size="small" @click="handleEdit(scope.row)"
             >编辑</el-button
           >
-          <el-button type="danger" size="small" @click="deleteSingleDept(scope.row)"
+          <el-button
+            type="danger"
+            size="small"
+            @click="deleteSingleDept(scope.row)"
             >删除</el-button
           >
         </template>
       </el-table-column>
     </el-table>
-
+    <el-pagination
+      background
+      layout="prev, pager, next"
+      :total="50"
+      @current-change="changePage"
+    >
+    </el-pagination>
     <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
       <span>
         <el-form ref="form" :model="editForm" label-width="80px">
@@ -85,12 +95,14 @@ export default {
     };
   },
   methods: {
-    select() {
+    select(page = 1) {
       this.$http({
         url: "/getDept",
         method: "GET",
         params: {
-          deptName: this.selectForm.deptName
+          deptName: this.selectForm.deptName,
+          page: page,
+          size: this.$STATICE_SETTING.pageSize,
         }
       }).then(res => {
         const data = res.data;
@@ -133,11 +145,15 @@ export default {
     },
 
     deleteSingleDept(detailInfo) {
-      this.$confirm(`此操作将永久删除${detailInfo.deptName}信息, 是否继续？`, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
+      this.$confirm(
+        `此操作将永久删除${detailInfo.deptName}信息, 是否继续？`,
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      )
         .then(() => {
           this.$http({
             url: "/deleteDept",
@@ -177,18 +193,21 @@ export default {
             url: "/deleteDept",
             method: "POST",
             data: {
-              ids,
+              ids
             }
           }).then(res => {
             const data = res.data;
-						if ((data.status >= 200 && data.status < 300) || data.status === 304) {
-							this.$message({
-								type: "success",
-								message: "删除成功!"
-							});
-						} else {
-							this.$message({ type: 'warning', message: data.message })
-						}
+            if (
+              (data.status >= 200 && data.status < 300) ||
+              data.status === 304
+            ) {
+              this.$message({
+                type: "success",
+                message: "删除成功!"
+              });
+            } else {
+              this.$message({ type: "warning", message: data.message });
+            }
             this.select();
           });
         })
@@ -202,11 +221,15 @@ export default {
 
     handleSelectionChange(selected) {
       this.selectedTable = selected;
+    },
+
+    changePage(page) {
+      this.select(page);
     }
   },
   mounted() {
     this.select();
-  },
+  }
 };
 </script>
 
