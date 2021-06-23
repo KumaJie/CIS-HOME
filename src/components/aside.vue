@@ -1,7 +1,7 @@
 <template>
     <el-menu
         class="aside"
-        style="margin-left: 70px"
+        style="width:245px"
         unique-opened
         router
         background-color="#2A3542"
@@ -134,12 +134,8 @@ export default {
 };
 </script>
 <style>
-aside::before {
-    content: "";
-    display: block;
-    height: 92%;
-    width: 300px;
-    position: absolute;
-    background-color: #2a3542;
+.aside{
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+    font-size: 100px;
 }
 </style>

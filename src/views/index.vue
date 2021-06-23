@@ -4,13 +4,13 @@
             <Header></Header>
         </el-header>
         <el-container>
-            <el-aside>
+            <el-aside style="width: 245px; overflow: hidden" class="aside">
                 <Aside></Aside>
             </el-aside>
             <el-main style="height: 700px">
                 <el-breadcrumb
                     separator-class="el-icon-arrow-right"
-                    style="margin-bottom: 20px"
+                    style="margin-bottom: 50px"
                 >
                     <el-breadcrumb-item :to="{ path: '/' }"
                         >首页</el-breadcrumb-item
@@ -21,7 +21,9 @@
                         >{{ item }}</el-breadcrumb-item
                     >
                 </el-breadcrumb>
-                <router-view />
+                <div style="padding: 0 20px">
+                    <router-view />
+                </div>
             </el-main>
         </el-container>
     </el-container>
@@ -63,5 +65,13 @@ export default {
     left: 0;
     position: absolute;
     background-color: #35404d;
+}
+.aside::before {
+    content: "";
+    display: block;
+    height: 92%;
+    width: 245px;
+    position: absolute;
+    background-color: #2a3542;
 }
 </style>
