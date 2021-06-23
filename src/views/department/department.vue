@@ -18,7 +18,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" size="small" @click="deleteDepts"
+          <el-button type="primary" size="small" @click="deleteListDept"
             >删除</el-button
           >
         </el-form-item>

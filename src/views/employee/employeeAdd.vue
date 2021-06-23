@@ -122,6 +122,7 @@
 <script>
 import { settingMixin } from "./settingMixin";
 export default {
+    mixins: [settingMixin],
     data() {
         return {
             formData: {
