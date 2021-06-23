@@ -122,45 +122,6 @@
 <script>
 import { settingMixin } from "./settingMixin";
 export default {
-<<<<<<< HEAD
-    data() {
-        return {
-            formData: {
-                employeeName: "",
-                cardId: "",
-                sex: "",
-                jobId: "",
-                education: "",
-                email: "",
-                tel: "",
-                phone: "",
-                party: "",
-                qqNum: "",
-                address: "",
-                postCard: "",
-                birthday: "",
-                race: "",
-                speciality: "",
-                hobby: "",
-                remark: "",
-                deptId: "",
-            },
-        };
-    },
-    methods: {
-        onSubmit() {
-            this.$http.post("insertEmployee", this.formData).then((res) => {
-                console.log(res);
-                if(res.data.status === 200){
-                    this.$message({
-                        message: "添加成功",
-                        type: "success"
-                    })
-                }
-            });
-        },
-    },
-=======
   mixins: [settingMixin],
   data() {
     return {
@@ -193,7 +154,6 @@ export default {
       });
     }
   }
->>>>>>> dev
 };
 </script>
 
