@@ -31,6 +31,7 @@
       </el-table-column>
     </el-table>
 
+    <!-- 页面跳转 -->
     <div>
       <el-pagination
         @size-change="handleSizeChange"
@@ -45,25 +46,23 @@
     </div>
 
     <el-dialog title="添加公告" :visible.sync="dialogFormVisible">
-      <el-form :model="form">
+      <el-form :model="noticeTable">
         <el-form-item label="公告标题" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off"></el-input>
+          <el-input v-model="noticeTable.name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="公告内容" :label-width="formLabelWidth">
           <el-input
             type="textarea"
             :rows="2"
             placeholder="请输入内容"
-            v-model="form.concent"
+            v-model="noticeTable.concent"
           >
           </el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false"
-          >确 定</el-button
-        >
+        <el-button type="primary" @click="editEdit">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -71,14 +70,9 @@
       title="预览"
       :visible.sync="dialogSeakVisible"
       width="30%"
-      :before-close="handleClose">
-      <span>{{preView}}</span>
-      <!-- <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false"
-          >确 定</el-button
-        >
-      </span> -->
+      :before-close="handleClose"
+    >
+      <span>{{ preView }}</span>
     </el-dialog>
   </div>
 </template>
@@ -87,13 +81,19 @@
 export default {
   data() {
     return {
-        preView: "",
+      preView: "",
       talbeData: [
         {
           noticeTitle: "徐家乐",
           noticeContent: "王祥是sb",
           noticeCreate: "dfdf",
           userId: "45",
+        },
+        {
+          noticeTitle: "徐家乐",
+          noticeContent: "徐家乐帅哥",
+          noticeCreate: "222",
+          userId: "46",
         },
       ],
       currentPage: 4,
@@ -102,7 +102,7 @@ export default {
         concent: "",
       },
       dialogFormVisible: false,
-      dialogSeakVisible:false,
+      dialogSeakVisible: false,
       form: {
         name: "",
         concent: "",
@@ -114,22 +114,45 @@ export default {
         desc: "",
       },
       formLabelWidth: "120px",
+      selectedTable:[],
+      noticeTable:{
+        name: "",
+        concent:"",
+      },
     };
   },
+
   methods: {
-    edit(detailInfo) {
+    edit(detailInfo) {//打开编辑弹窗
       console.log(detailInfo);
       this.dialogFormVisible = true;
+      this.noticeTable=detailInfo;
     },
-    seak(detailInfo) {
+    editEdit() {//确定编辑
+      if (this.form.name === null || this.form.concent === "") {
+        this.$message({ type: "warning", message: "修改字段不能为空！" });
+        return;
+      }
+      this.$http({
+        url: "http://localhost:8080/updateNotice",
+        method: "POST",
+        data: {
+          noticeId:this.noticeTable.noticeId,
+          noticeTitle: this.noticeTable.name,
+          noticeContent: this.noticeTable.concent,
+        },
+      }).then((res) => {
+        const data = res.data;
+        this.dialogFormVisible = false;
+        this.$message({ type: "warning", message: data.message });
+        this.select();
+      });
+    },
+
+    seak(detailInfo) {//打开浏览弹窗
       console.log(detailInfo);
-      this.dialogSeakVisible=true;
-      this.preView = detailInfo.noticeContent
-    //   this.$confirm('确认关闭？')
-    //       .then(_ => {
-    //         done();
-    //       })
-    //       .catch(_ => {});
+      this.dialogSeakVisible = true;
+      this.preView = detailInfo.noticeContent;
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
@@ -137,12 +160,59 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
     },
-    onSearch() {
+
+    onSearch() {//搜索
       console.log("search!");
+      this.$http({
+        url: "http://localhost:8080/getNotice",
+        method: "GET",
+        params: {
+          noticeTitle: this.notice.name,
+          noticeContent:this.notice.concent,
+        },
+      }).then((res) => {
+        const data = res.data;
+        if ((data.status >= 200 && data.status < 300) || data.status === 304) {
+          this.talbeData = data.data;
+        } else {
+          this.$message({ type: "warning", message: data.message });
+        }
+      });
     },
     onDelete() {
       console.log("delete!");
+      let ids=[];
+      this.selectedTable.forEach((val) => {
+        ids.push(val.noticeId);
+      })
+      this.$http
+        .post("deleteNotice",{
+          ids,
+        })
+        .then((res) => {
+          this.getList();
+        })
     },
+    getList(page = 1){
+      this.$http
+      .get("listNotice",{
+        params:{
+          page,
+        }
+      })
+      then((res) => {
+        this.talbeData = res.data.data;
+      })
+    },
+    changePage(page){
+      this.getList(page);
+    },
+    handleSelectionChange(selected){
+      this.selectedTable=selected;
+    }
+  },
+  mounted(){
+    this.getList();
   },
 };
 </script>
