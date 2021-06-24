@@ -42,7 +42,7 @@
     <el-pagination
       background
       layout="prev, pager, next"
-      :total="50"
+      :total="dataTotal"
       @current-change="changePage"
     >
     </el-pagination>
@@ -99,7 +99,8 @@ export default {
       dialogFormVisible: false,
       headers:{
         Authorization: getTokenFromStorage()
-      }
+      },
+      dataTotal: 20,
     };
   },
   methods: {
@@ -153,7 +154,8 @@ export default {
           },
         })
         .then((res) => {
-          this.talbeData = res.data.data;
+          this.talbeData = res.data.data.list;
+          this.dataTotal = res.data.data.total;
         });
     },
     changePage(page) {

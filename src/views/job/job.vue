@@ -33,7 +33,7 @@
     <el-pagination
       background
       layout="prev, pager, next"
-      :total="50"
+      :total="dataTotal"
       @current-change="changePage"
     >
     </el-pagination>
@@ -76,7 +76,8 @@ export default {
       },
       talbeData: [],
       // 被选中的表行
-      selectedTable: []
+      selectedTable: [],
+      dataTotal: 20,
     };
   },
   methods: {
@@ -101,7 +102,7 @@ export default {
           params: {
             jobName: this.queryFrom.jobName,
             page,
-            size: 10
+            size: this.$STATICE_SETTING.pageSize
           }
         })
         .then(res => {
@@ -110,7 +111,8 @@ export default {
             (data.status >= 200 && data.status < 300) ||
             data.status === 304
           ) {
-            this.talbeData = data.data;
+            this.talbeData = data.data.list;
+            this.dataTotal = data.data.total;
           } else {
             this.$message({
               type: "warning",

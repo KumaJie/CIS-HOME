@@ -18,7 +18,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" size="small" @click="deleteDepts"
+          <el-button type="primary" size="small" @click="deleteListDept"
             >删除</el-button
           >
         </el-form-item>
@@ -48,7 +48,7 @@
     <el-pagination
       background
       layout="prev, pager, next"
-      :total="50"
+      :total="dataTotal"
       @current-change="changePage"
     >
     </el-pagination>
@@ -88,7 +88,8 @@ export default {
       },
       updateItemId: null,
       talbeData: [],
-      selectedTable: []
+      selectedTable: [],
+      dataTotal: 20
     };
   },
   methods: {
@@ -104,7 +105,8 @@ export default {
       }).then(res => {
         const data = res.data;
         if ((data.status >= 200 && data.status < 300) || data.status === 304) {
-          this.talbeData = data.data;
+          this.talbeData = data.data.list;
+          this.dataTotal = data.data.total;
         } else {
           this.$message({ type: "warning", message: data.message });
         }

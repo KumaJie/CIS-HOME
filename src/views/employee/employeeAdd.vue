@@ -23,10 +23,10 @@
         ><el-form-item label="职位">
           <el-select v-model="formData.jobId">
             <el-option
-              v-for="item in jobNameAndIds"
-              :key="item.jobName"
-              :label="item.jobName"
-              :value="item.jobId"
+              v-for="jobItem in jobNameAndIds"
+              :key="jobItem.jobId"
+              :label="jobItem.jobName"
+              :value="jobItem.code"
             />
           </el-select> </el-form-item
       ></el-col>
@@ -105,10 +105,10 @@
         ><el-form-item label="所属部门">
           <el-select v-model="formData.deptId">
             <el-option
-              v-for="item in deptNameAndIds"
-              :key="item.deptName"
-              :label="item.deptName"
-              :value="item.deptId"
+              v-for="deptItem in deptNameAndIds"
+              :key="deptItem.deptId"
+              :label="deptItem.deptName"
+              :value="deptItem.code"
             />
           </el-select> </el-form-item
       ></el-col>
@@ -122,43 +122,44 @@
 <script>
 import { settingMixin } from "./settingMixin";
 export default {
-    data() {
-        return {
-            formData: {
-                employeeName: "",
-                cardId: "",
-                sex: "",
-                jobId: "",
-                education: "",
-                email: "",
-                tel: "",
-                phone: "",
-                party: "",
-                qqNum: "",
-                address: "",
-                postCard: "",
-                birthday: "",
-                race: "",
-                speciality: "",
-                hobby: "",
-                remark: "",
-                deptId: "",
-            },
-        };
-    },
-    methods: {
-        onSubmit() {
-            this.$http.post("insertEmployee", this.formData).then((res) => {
-                console.log(res);
-                if(res.data.status === 200){
-                    this.$message({
-                        message: "添加成功",
-                        type: "success"
-                    })
-                }
-            });
-        },
-    },
+  mixins: [settingMixin],
+  data() {
+    return {
+      formData: {
+        employeeName: "",
+        cardId: "",
+        sex: "",
+        jobId: "",
+        education: "",
+        email: "",
+        tel: "",
+        phone: "",
+        party: "",
+        qqNum: "",
+        address: "",
+        postCard: "",
+        birthday: "",
+        race: "",
+        speciality: "",
+        hobby: "",
+        remark: "",
+        deptId: ""
+      }
+    };
+  },
+  methods: {
+    onSubmit() {
+      this.$http.post("insertEmployee", this.formData).then(res => {
+        console.log(res);
+        if (res.data.status === 200) {
+          this.$message({
+            message: "添加成功",
+            type: "success"
+          });
+        }
+      });
+    }
+  }
 };
 </script>
 
