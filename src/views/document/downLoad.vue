@@ -201,7 +201,8 @@ export default {
           }
         })
         .then(res => {
-          this.talbeData = res.data.data;
+          this.talbeData = res.data.data.list;
+          this.dataTotal = res.data.data.total;
         });
     },
     // 点击多选框发生的变化
