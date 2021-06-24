@@ -67,7 +67,10 @@ export default {
       this.fileList = [];
     },
     submitUpload() {
-      this.formData.userId = 1;
+      if(this.fileList.length == 0){
+        return this.$message.error("请选择文件");
+      }
+      this.formData.userId = this.$store.state.userInfo.userId;
       this.$refs.upLoad.submit();
       this.$message.success("上传成功");
       this.resetForm();

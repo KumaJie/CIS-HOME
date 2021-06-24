@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import { getTokenFromStorage } from '@/utils/storage';
+import { getTokenFromStorage } from "@/utils/storage";
 export default {
   data() {
     return {
@@ -97,7 +97,7 @@ export default {
       fileList: [],
       multipleSelection: [], //存放已选择的数据
       dialogFormVisible: false,
-      headers:{
+      headers: {
         Authorization: getTokenFromStorage()
       },
       dataTotal: 20,
@@ -122,11 +122,11 @@ export default {
     change() {
       if (this.flag) {
         this.$refs.upLoad.submit();
-        setTimeout(()=>{
+        setTimeout(() => {
           this.getDoc(1);
-        },1000)
+        }, 1000);
       } else {
-        this.$http.post("/updateDocsText", this.formData).then((e) => {
+        this.$http.post("/updateDocsText", this.formData).then(e => {
           this.getDoc(1);
         });
       }
@@ -140,8 +140,9 @@ export default {
       this.getDoc(1);
     },
     // 下载
+    // 存在问题！！
     downLoad(detailInfo) {
-      this.$http.post("/downLoad", detailInfo).then((res) => {
+      this.$http.post("/downLoad", detailInfo).then(res => {
         window.location.href = res.data.message;
       });
     },
@@ -150,10 +151,10 @@ export default {
       this.$http
         .get("getDocs", {
           params: {
-            page,
-          },
+            page
+          }
         })
-        .then((res) => {
+        .then(res => {
           this.talbeData = res.data.data.list;
           this.dataTotal = res.data.data.total;
         });
@@ -165,39 +166,52 @@ export default {
     deleteSelection() {
       if (this.multipleSelection.length == 0)
         return this.$message.error("请选择要删除的文档");
-      let ids = [];
-      for (var i = 0; i < this.multipleSelection.length; i++) {
-        ids.push(this.multipleSelection[i].documentId);
-      }
-      this.$http.post("/deleteDocs", { ids }).then((e) => {
-        if (e.data.message == "删除成功") {
-          this.$message.success("删除成功");
-        } else {
-          this.$message.error("删除失败");
-        }
-        this.getDoc(1);
-      });
+      this.$confirm("此操作将永久删除选中的所有文档, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let ids = [];
+          for (var i = 0; i < this.multipleSelection.length; i++) {
+            ids.push(this.multipleSelection[i].documentId);
+          }
+          this.$http.post("/deleteDocs", { ids }).then(e => {
+            if (e.data.message == "删除成功") {
+              this.$message.success("删除成功");
+            } else {
+              this.$message.error("删除失败");
+            }
+            this.getDoc(1);
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     },
     //搜索
     search() {
       this.$http
         .get("getDocs", {
           params: {
-            documentTitle: this.title,
-          },
+            documentTitle: this.title
+          }
         })
-        .then((res) => {
+        .then(res => {
           this.talbeData = res.data.data;
         });
     },
     // 点击多选框发生的变化
     handleSelectionChange(val) {
       this.multipleSelection = val; //给定义的数组赋值
-    },
+    }
   },
   mounted() {
     this.getDoc(1);
-  },
+  }
 };
 </script>
 <style>
