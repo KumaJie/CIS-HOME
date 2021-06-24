@@ -2,9 +2,13 @@
   <div>
     <el-form :model="formData" :inline="true">
       <el-form-item label="职位">
-        <el-select v-model="formData.jobName">
-          <el-option label="java中级开发工程师" value="0"></el-option>
-          <el-option label="java高级开发工程师" value="1"></el-option>
+        <el-select v-model="formData.jobId">
+          <el-option
+            v-for="item in jobNameAndIds"
+            :key="item.code"
+            :label="item.jobName"
+            :value="item.code"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="姓名">
@@ -23,24 +27,30 @@
         <el-input v-model="formData.tel"></el-input>
       </el-form-item>
       <el-form-item label="所属部门">
-        <el-select v-model="formData.deptName">
-          <el-option label="研发部" value="0"></el-option>
-          <el-option label="营销部" value="1"></el-option>
+        <el-select v-model="formData.deptId">
+          <el-option
+            v-for="item in deptNameAndIds"
+            :key="item.code"
+            :label="item.deptName"
+            :value="item.code"
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button @click="search">搜索</el-button>
+        <el-button @click="search(1)">搜索</el-button>
         <el-button @click="del">删除</el-button>
       </el-form-item>
     </el-form>
+
     <el-table
       :data="talbeData"
       border
       @selection-change="handleSelectionChange"
       style="margin-bottom: 20px"
     >
-      <el-table-column type="selection"></el-table-column>
-      <el-table-column label="姓名" prop="employeeName"> </el-table-column>
+      <el-table-column type="selection" fixed="left"></el-table-column>
+      <el-table-column label="姓名" prop="employeeName" fixed="left">
+      </el-table-column>
       <el-table-column label="性别" prop="sex"> </el-table-column>
       <el-table-column label="手机号码" prop="tel"> </el-table-column>
       <el-table-column label="邮箱" prop="email"> </el-table-column>
@@ -51,7 +61,7 @@
       <el-table-column label="联系地址" prop="address"> </el-table-column>
       <el-table-column label="建档日期" prop="employeeCreate">
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" fixed="right">
         <template slot-scope="scope">
           <el-button type="danger" size="small" @click="edit(scope.row)"
             >编辑</el-button
@@ -59,13 +69,15 @@
         </template>
       </el-table-column>
     </el-table>
+
     <el-pagination
       background
       layout="prev, pager, next"
-      :total="50"
+      :total="dataTotal"
       @current-change="changePage"
     >
     </el-pagination>
+
     <el-dialog :visible.sync="dialogVisible">
       <el-form :model="editTable" label-position="right" label-width="90px">
         <el-row>
@@ -96,9 +108,13 @@
         <el-row>
           <el-col :span="10"
             ><el-form-item label="职位">
-              <el-select v-model="editTable.jobName">
-                <el-option label="java中级开发工程师" value="0"></el-option>
-                <el-option label="java高级开发工程师" value="1"></el-option>
+              <el-select v-model="editTable.jobId">
+                <el-option
+                  v-for="jobItem in jobNameAndIds"
+                  :key="jobItem.code"
+                  :label="jobItem.jobName"
+                  :value="jobItem.code"
+                />
               </el-select> </el-form-item
           ></el-col>
           <el-col :span="10" :offset="2"
@@ -114,8 +130,12 @@
           <el-col :span="10" :offset="2"
             ><el-form-item label="所属部门">
               <el-select v-model="editTable.deptName">
-                <el-option label="研发部" value="0"></el-option>
-                <el-option label="营销部" value="1"></el-option>
+                <el-option
+                  v-for="deptItem in deptNameAndIds"
+                  :key="deptItem.code"
+                  :label="deptItem.deptName"
+                  :value="deptItem.code"
+                />
               </el-select> </el-form-item
           ></el-col>
         </el-row>
@@ -132,10 +152,20 @@
 </template>
 
 <script>
+import { settingMixin } from "./settingMixin";
+
 export default {
+  mixins: [settingMixin],
   data() {
     return {
-      formData: {},
+      formData: {
+        jobId: "",
+        employeeName: "",
+        cardId: "",
+        sex: "",
+        tel: "",
+        deptId: ""
+      },
       talbeData: [
         {
           employeeName: "张三",
@@ -147,7 +177,7 @@ export default {
           cardId: "360123xxxx",
           deptName: "研发部",
           address: "重庆理工大学",
-          employeeCreate: "2021年6月17日",
+          employeeCreate: "2021年6月17日"
         },
         {
           employeeName: "张二",
@@ -159,7 +189,7 @@ export default {
           cardId: "360123xxxx",
           deptName: "研发部",
           address: "重庆理工大学",
-          employeeCreate: "2021年6月17日",
+          employeeCreate: "2021年6月17日"
         },
         {
           employeeName: "张一",
@@ -171,12 +201,20 @@ export default {
           cardId: "360123xxxx",
           deptName: "研发部",
           address: "重庆理工大学",
-          employeeCreate: "2021年6月17日",
-        },
+          employeeCreate: "2021年6月17日"
+        }
       ],
-      editTable: {},
+      editTable: {
+        jobId: "",
+        employeeName: "",
+        cardId: "",
+        sex: "",
+        tel: "",
+        deptId: ""
+      },
       selectedTable: [],
       dialogVisible: false,
+      dataTotal: 20
     };
   },
   methods: {
@@ -184,11 +222,15 @@ export default {
       this.$http
         .get("listEmployee", {
           params: {
-            page,
-          },
+            page
+          }
         })
-        .then((res) => {
-          this.talbeData = res.data.data;
+        .then(res => {
+          res.data.data.forEach(val => {
+            val.sex = val.sex == 1 ? "男" : "女";
+          });
+          this.talbeData = res.data.data.list;
+          this.dataTotal = res.data.data.total;
         });
     },
     edit(detailInfo) {
@@ -197,19 +239,19 @@ export default {
     },
     del() {
       let ids = [];
-      this.selectedTable.forEach((val) => {
+      this.selectedTable.forEach(val => {
         ids.push(val.employeeId);
       });
       this.$http
         .post("deleteEmployee", {
-          ids,
+          ids
         })
-        .then((res) => {
+        .then(res => {
           this.getList();
         });
     },
     submitEdit() {
-      this.$http.post("modifyEmployee", this.editTable).then((res) => {
+      this.$http.post("modifyEmployee", this.editTable).then(res => {
         this.getList();
       });
       this.dialogVisible = false;
@@ -220,19 +262,25 @@ export default {
     changePage(page) {
       this.getList(page);
     },
-    search() {
+    search(page = 1) {
       this.$http
         .get("listEmployee", {
-          params: this.formData,
+          params: {
+            page,
+            ...this.formData
+          }
         })
-        .then((res) => {
+        .then(res => {
+          res.data.data.forEach(val => {
+            val.sex = val.sex == 1 ? "男" : "女";
+          });
           this.talbeData = res.data.data;
         });
-    },
+    }
   },
   mounted() {
     this.getList();
-  },
+  }
 };
 </script>
 <style>

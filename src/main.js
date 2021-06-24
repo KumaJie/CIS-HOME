@@ -4,10 +4,22 @@ import router from './router'
 import store from './store'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-import axios from 'axios'
+import http from './httpSetting';
 
-axios.defaults.baseURL = "http://localhost:8080"
-Vue.prototype.$http = axios
+Vue.prototype.$http = http;
+
+const SettingStray = {
+  getDeptNameAndId: http.get('/sys/dept_setting'),
+  getJobNameAndId: http.get('/sys/job_setting'),
+  getStatusNameAndCode: http.get('/sys/authority_setting')
+}
+
+Vue.prototype.$getSysSetting = function(settingType) {
+  return SettingStray[settingType];
+}
+Vue.prototype.$STATICE_SETTING = Object.freeze({
+  pageSize: 10,
+})
 
 Vue.use(ElementUI)
 Vue.config.productionTip = false

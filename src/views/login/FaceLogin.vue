@@ -1,7 +1,6 @@
 <template>
   <div class="face-container">
-
-    <el-card class="face-card" :body-style="{ padding: '0px' }">
+    <div class="face-card">
       <div class="camera_outer">
         <video
           ref="videoCamera"
@@ -15,13 +14,11 @@
           :width="videoWidth"
           :height="videoHeight"
         ></canvas>
-
-        <div v-if="imgSrc" class="img_bg_camera">
-          <img :src="imgSrc" alt="" class="tx_img" />
-        </div>
-        <!-- <el-button @click="setImage()"></el-button> -->
       </div>
-    </el-card>
+    </div>
+    <div class="btn-wrap">
+      <el-button @click="login" v-loading.fullscreen.lock="fullscreenLoading">刷脸</el-button>
+    </div>
   </div>
 </template>
 
@@ -35,7 +32,8 @@ export default {
       imgSrc: "",
       thisCancas: null,
       thisContext: null,
-      thisVideo: null
+      thisVideo: null,
+      fullscreenLoading: false,
     };
   },
   mounted() {
@@ -103,7 +101,7 @@ export default {
     },
     //  绘制图片（拍照功能）
 
-    setImage() {
+    getImage() {
       var _this = this;
       // 点击，canvas画图
       _this.thisContext.drawImage(
@@ -115,8 +113,9 @@ export default {
       );
       // 获取图片base64链接
       var image = this.thisCancas.toDataURL("image/png");
-      _this.imgSrc = image;
-      this.$emit("refreshDataList", this.imgSrc);
+      // _this.imgSrc = image;
+      return image;
+      // this.$emit("refreshDataList", this.imgSrc);
     },
     // base64转文件
 
@@ -135,7 +134,42 @@ export default {
 
     stopNavigator() {
       this.thisVideo.srcObject.getTracks()[0].stop();
+    },
+
+    login() {
+      this.fullscreenLoading = true;
+      const dataUrl = this.getImage();
+      const file = this.dataURLtoFile(dataUrl, 'face.png');
+      const formData = new FormData();
+      formData.append('faceImage', file);
+      this.$http({
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        method: 'POST',
+        url: 'http://localhost:8080/face_login',
+        data: formData
+      }).then(res => {
+        this.fullscreenLoading = false;
+        const data = res.data;
+        if ((data.status >= 200 && data.status < 300) || data.status === 304 ) {
+          this.$store.commit('initUserInfo', data.data)
+          this.$message({ type: 'success', message: "登录成功" });
+          const that = this;
+          setTimeout(() => {
+            that.$router.replace({ path: '/index' })
+          }, 1500)
+        } else {
+          this.$message({ type: 'warning', message: data.message })
+        }
+      })
     }
+  },
+  beforeDestroy() {
+    this.stopNavigator();
+    this.thisCancas = null,
+    this.thisContext = null,
+    this.thisVideo = null
   }
 };
 </script>
@@ -146,10 +180,24 @@ export default {
   height: 100vh;
   box-sizing: border-box;
   background-color: #eee;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   overflow: hidden;
 }
 .face-card {
+  border: 2px solid #ddd;
   width: 300px;
-  margin: 100px auto 0 auto;
+  padding: 10px;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+video,
+.camera_outer {
+  border-radius: 50%;
+}
+.btn-wrap {
+  margin-top: 10px;
+  text-align: center;
 }
 </style>
