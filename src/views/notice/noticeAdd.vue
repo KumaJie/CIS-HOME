@@ -21,14 +21,26 @@ export default {
   data() {
     return {
       form: {
-        name: "",
-        desc: "",
+        name: '',
+        desc: '',
       },
     };
   },
   methods:{
       onSubmit() {
         console.log('submit!');
+        this.$http({
+          url:"http://localhost:8080/addNotice",
+          method:"POST",
+          data:{
+            noticeTitle:this.form.name,
+            noticeContent:this.form.desc,
+            userId:3,
+          }
+        }).then(res =>{
+          const data = res.data;
+          this.$message({type:'warning',message:data.message})
+        })
       }
   }
 };
