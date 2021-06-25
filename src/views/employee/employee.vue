@@ -214,7 +214,7 @@ export default {
       },
       selectedTable: [],
       dialogVisible: false,
-      dataTotal: 20
+      dataTotal: 0
     };
   },
   methods: {
