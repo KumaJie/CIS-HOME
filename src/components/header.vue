@@ -4,9 +4,11 @@
             <div class="title-icon"></div>
         </el-col>
         <el-col :span="4"><div class="title-logo"></div></el-col>
-        <el-col :span="2" :offset="3"
-            ><div id="he-plugin-simple" style="weather"></div
-        ></el-col>
+        <el-col :span="2" :offset="3">
+            <div id="he-plugin-simple"></div>
+
+            ></el-col
+        >
         <el-col :span="2" :offset="2">欢迎登陆 {{ userName }}</el-col>
         <el-col :span="2">{{ nowDate }}</el-col>
         <el-col :span="2">
@@ -69,6 +71,7 @@ export default {
                 fixed: "false",
                 vertical: "center",
                 horizontal: "center",
+                zindex: "999",
                 key: "72554aaa11464f5398ab10875b349e2a",
             },
         };
@@ -82,6 +85,9 @@ export default {
 </script>
 
 <style>
+#he-plugin-simple {
+    z-index: 999;
+}
 .title-icon::before {
     content: "";
     display: block;
