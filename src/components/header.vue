@@ -26,10 +26,10 @@
     >
     <el-col :span="2"
       ><el-link
+        @click="logout"
         icon="el-icon-setting"
         :underline="false"
         type="primary"
-        href="/login"
         >退出登录</el-link
       >
     </el-col>
@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import { deleteTokenFromStorage } from '@/utils/storage';
 import { mapGetters } from "vuex";
 
 export default {
@@ -44,6 +45,16 @@ export default {
     ...mapGetters(["userName"]),
     nowDate() {
       return new Date().toLocaleDateString();
+    }
+  },
+  methods: {
+    logout() {
+      this.$confirm("确定退出登录？").then(() => {
+        this.$http.get("/logout").then(() =>{
+          deleteTokenFromStorage();
+          this.$router.replace("/login")
+        })
+      })
     }
   }
 };
