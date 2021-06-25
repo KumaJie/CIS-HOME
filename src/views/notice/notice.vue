@@ -1,24 +1,29 @@
 <template>
   <div>
-    <el-form :inline="true" :model="notice" class="demo-form-inline">
+    <el-form :inline="true" :model="queryFrom" class="demo-form-inline">
       <el-form-item label="公告名称">
-        <el-input v-model="notice.name"></el-input>
+        <el-input v-model="queryFrom.noticeTitle"></el-input>
       </el-form-item>
       <el-form-item label="公告内容">
-        <el-input v-model="notice.concent"></el-input>
+        <el-input v-model="queryFrom.noticeContent"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSearch">查询</el-button>
+        <el-button type="primary" @click="onSearch(1)">查询</el-button>
         <el-button type="primary" @click="onDelete">删除</el-button>
       </el-form-item>
     </el-form>
 
-    <el-table :data="talbeData" border>
+    <el-table
+      :data="talbeData"
+      border
+      @selection-change="handleSelectionChange"
+      style="margin-bottom: 20px"
+    >
       <el-table-column type="selection"> </el-table-column>
       <el-table-column label="公告名称" prop="noticeTitle"> </el-table-column>
       <el-table-column label="公告内容" prop="noticeContent"> </el-table-column>
       <el-table-column label="创建时间" prop="noticeCreate"> </el-table-column>
-      <el-table-column label="公告人" prop="userId"> </el-table-column>
+      <el-table-column label="公告人" prop="userName"> </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button type="danger" size="small" @click="edit(scope.row)"
@@ -32,37 +37,34 @@
     </el-table>
 
     <!-- 页面跳转 -->
-    <div>
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="400"
-      >
-      </el-pagination>
-    </div>
+    
+    <el-pagination
+      background
+      layout="prev, pager, next"
+      :total="dataTotal"
+      @current-change="changePage"
+    >
+    </el-pagination>
+  
 
-    <el-dialog title="添加公告" :visible.sync="dialogFormVisible">
-      <el-form :model="noticeTable">
+    <el-dialog title="修改公告" :visible.sync="dialogFormVisible">
+      <el-form :model="updateForm">
         <el-form-item label="公告标题" :label-width="formLabelWidth">
-          <el-input v-model="noticeTable.name" autocomplete="off"></el-input>
+          <el-input v-model="updateForm.noticeTitle" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="公告内容" :label-width="formLabelWidth">
           <el-input
             type="textarea"
             :rows="2"
             placeholder="请输入内容"
-            v-model="noticeTable.concent"
+            v-model="updateForm.noticeContent"
           >
           </el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editEdit">确 定</el-button>
+        <el-button type="primary" @click="updateNotice">修改</el-button>
       </div>
     </el-dialog>
 
@@ -70,10 +72,10 @@
       title="预览"
       :visible.sync="dialogSeakVisible"
       width="30%"
-      :before-close="handleClose"
     >
       <span>{{ preView }}</span>
     </el-dialog>
+
   </div>
 </template>
 
@@ -82,66 +84,46 @@ export default {
   data() {
     return {
       preView: "",
-      talbeData: [
-        {
-          noticeTitle: "徐家乐",
-          noticeContent: "王祥是sb",
-          noticeCreate: "dfdf",
-          userId: "45",
-        },
-        {
-          noticeTitle: "徐家乐",
-          noticeContent: "徐家乐帅哥",
-          noticeCreate: "222",
-          userId: "46",
-        },
-      ],
-      currentPage: 4,
-      notice: {
-        name: "",
-        concent: "",
+      talbeData: [],
+      queryFrom: {
+        noticeTitle: "",
+        noticeContent: ""
       },
       dialogFormVisible: false,
       dialogSeakVisible: false,
-      form: {
-        name: "",
-        concent: "",
-        date1: "",
-        date2: "",
-        delivery: false,
-        type: [],
-        resource: "",
-        desc: "",
-      },
       formLabelWidth: "120px",
-      selectedTable:[],
-      noticeTable:{
-        name: "",
-        concent:"",
+      selectedTable: [],
+      updateForm: {
+        noticeTitle: "",
+        noticeContent: ""
       },
+      updateTarget: null,
+      dataTotal: 0
     };
   },
 
   methods: {
-    edit(detailInfo) {//打开编辑弹窗
-      console.log(detailInfo);
+    edit(detailInfo) {
+      //打开编辑弹窗
       this.dialogFormVisible = true;
-      this.noticeTable=detailInfo;
+      this.updateTarget = detailInfo;
     },
-    editEdit() {//确定编辑
+
+    updateNotice() {
+      //确定编辑
       if (this.form.name === null || this.form.concent === "") {
         this.$message({ type: "warning", message: "修改字段不能为空！" });
         return;
       }
       this.$http({
-        url: "http://localhost:8080/updateNotice",
+        url: "/updateNotice",
         method: "POST",
         data: {
-          noticeId:this.noticeTable.noticeId,
-          noticeTitle: this.noticeTable.name,
-          noticeContent: this.noticeTable.concent,
-        },
-      }).then((res) => {
+          noticeId: this.updateTarget.noticeId,
+          noticeTitle: this.updateForm.noticeTitle,
+          noticeContent: this.updateForm.noticeContent
+        }
+      }).then(res => {
         const data = res.data;
         this.dialogFormVisible = false;
         this.$message({ type: "warning", message: data.message });
@@ -149,71 +131,65 @@ export default {
       });
     },
 
-    seak(detailInfo) {//打开浏览弹窗
+    seak(detailInfo) {
+      //打开浏览弹窗
       console.log(detailInfo);
       this.dialogSeakVisible = true;
       this.preView = detailInfo.noticeContent;
     },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-    },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-    },
 
-    onSearch() {//搜索
-      console.log("search!");
+    onSearch(page = 1) {
+      //搜索
       this.$http({
-        url: "http://localhost:8080/getNotice",
+        url: "/getNotice",
         method: "GET",
         params: {
-          noticeTitle: this.notice.name,
-          noticeContent:this.notice.concent,
-        },
-      }).then((res) => {
+          noticeTitle: this.queryFrom.noticeTitle,
+          noticeContent: this.queryFrom.noticeContent,
+          page,
+          size: this.$STATICE_SETTING.pageSize,
+        }
+      }).then(res => {
         const data = res.data;
         if ((data.status >= 200 && data.status < 300) || data.status === 304) {
-          this.talbeData = data.data;
+          this.talbeData = data.data.list;
+          this.dataTotal = data.data.total;
         } else {
           this.$message({ type: "warning", message: data.message });
         }
       });
     },
     onDelete() {
-      console.log("delete!");
-      let ids=[];
-      this.selectedTable.forEach((val) => {
+      let ids = [];
+      this.selectedTable.forEach(val => {
         ids.push(val.noticeId);
-      })
+      });
+      if (ids.length === 0) {
+        return;
+      }
       this.$http
-        .post("deleteNotice",{
-          ids,
+        .post("deleteNotice", {
+          ids
         })
-        .then((res) => {
-          this.getList();
-        })
+        .then(res => {
+          if (res.data.status === 200) {
+            this.$message({ type: "success", message: "删除成功"})
+          } else {
+            this.$message({ type: "warning", message: res.data.message })
+          }
+          this.onSearch(1);
+        });
     },
-    getList(page = 1){
-      this.$http
-      .get("listNotice",{
-        params:{
-          page,
-        }
-      })
-      then((res) => {
-        this.talbeData = res.data.data;
-      })
+    changePage(page) {
+      this.onSearch(page);
     },
-    changePage(page){
-      this.getList(page);
-    },
-    handleSelectionChange(selected){
-      this.selectedTable=selected;
+    handleSelectionChange(selected) {
+      this.selectedTable = selected;
     }
   },
-  mounted(){
-    this.getList();
-  },
+  mounted() {
+    this.onSearch(1);
+  }
 };
 </script>
 

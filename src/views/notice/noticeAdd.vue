@@ -1,47 +1,62 @@
 <template>
   <div>
-    <el-form ref="form" :model="form" label-width="80px">
-      <el-form-item label="活动名称">
-        <el-input v-model="form.name"></el-input>
+    <el-form :model="form">
+      <el-form-item label="公告标题" :label-width="formLabelWidth">
+        <el-input
+          v-model="form.noticeTitle"
+          autocomplete="off"
+        ></el-input>
       </el-form-item>
-      <el-form-item label="活动形式">
-        <el-input type="textarea" v-model="form.desc"></el-input>
+      <el-form-item label="公告内容" :label-width="formLabelWidth">
+        <el-input
+          type="textarea"
+          :rows="2"
+          placeholder="请输入内容"
+          v-model="form.noticeContent"
+        >
+        </el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">添 加</el-button>
-        <el-button>重 置</el-button>
+        <el-button type="primary" @click="addNotice">添加</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   name: "AddNotice",
   data() {
     return {
       form: {
-        name: '',
-        desc: '',
-      },
+        noticeTitle: "",
+        noticeContent: ""
+      }
     };
   },
-  methods:{
-      onSubmit() {
-        console.log('submit!');
-        this.$http({
-          url:"http://localhost:8080/addNotice",
-          method:"POST",
-          data:{
-            noticeTitle:this.form.name,
-            noticeContent:this.form.desc,
-            userId:3,
-          }
-        }).then(res =>{
-          const data = res.data;
-          this.$message({type:'warning',message:data.message})
-        })
+  computed: {
+    ...mapGetters(['loginUserId'])
+  },
+  methods: {
+    addNotice() {
+      if (this.form.noticeTitle == "" || this.form.noticeContent == "") {
+        this.$message("输入字段不能为空");
+        return;
       }
+      this.$http({
+        url: "/addNotice",
+        method: "POST",
+        data: {
+          noticeTitle: this.form.noticeTitle,
+          noticeContent: this.form.noticeContent,
+          userId: this.loginUserId
+        }
+      }).then(res => {
+        const data = res.data;
+        this.$message({ type: "warning", message: data.message });
+      });
+    }
   }
 };
 </script>
