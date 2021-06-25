@@ -18,7 +18,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">添加</el-button>
+        <el-button type="primary" @click="addUser">添加</el-button>
         <el-button type="danger" @click="onSubmit">取消</el-button>
       </el-form-item>
     </el-form>
@@ -30,14 +30,26 @@ export default {
   data() {
     return {
       formInline: {
-        user: "",
+        userName: "",
+        loginName: "",
         region: ""
       }, 
     };
   },
   methods: {
-    onSubmit() {
-      console.log("submit!");
+    addUser() {
+      this.$http({
+        url: "http://localhost:8080/addUser",
+        method: 'POST',
+        data: {
+          userName: this.formInline.userName,
+          loginName: this.formInline.loginName,
+          status: this.formInline.region,
+        }
+      }).then(res =>{
+        const data = res.data;
+          this.$message({type: 'warning',message:data.message})
+      })
     }
   }
 };

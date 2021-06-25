@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
+import persistedState from 'vuex-persistedstate'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -16,10 +16,8 @@ export default new Vuex.Store({
       state.userInfo = payload;
     }
   },
-  actions: {
-  },
-  modules: {
-  },
+  actions: {},
+  modules: {},
   getters: {
     loginUserId: state => {
       return state.userInfo && state.userInfo.userId
@@ -30,5 +28,8 @@ export default new Vuex.Store({
     userName: state => {
       return state.userInfo && state.userInfo.userName;
     }
-  }
+  },
+  plugins: [persistedState({
+    storage: window.sessionStorage
+  })]
 })

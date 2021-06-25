@@ -12,7 +12,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">查询</el-button>
-        <el-button type="danger" @click="onSubmit">删除</el-button>
+        <el-button type="danger" @click="de">删除</el-button>
       </el-form-item>
     </el-form>
 
@@ -25,9 +25,8 @@
       <el-table-column label="创建时间" prop="userCreate"> </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="danger" size="small" @click="edit(scope.row)"
-            >编辑</el-button
-          >
+          <el-button type="danger" size="small" @click="edit(scope.row)">编辑</el-button>
+          <el-button type="danger" size="small" @click="deleteUser(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -100,15 +99,78 @@ export default {
       ]
     };
   },
+
+
   methods: {
-    edit(userInfo) {
-      this.dialogTitle = `修改${userInfo.userName}信息`;
-      console.log(userInfo);
-      this.dialogFormVisible = true;
+
+    
+
+
+    edit() {
+     if(this.form.name === "" || this.form.region===""){
+       this.$message({type: 'warning', message: "修改字段不能为空！"});
+       return
+     }
+     this.$http({
+       url: "http://localhost:8080/updateUser",
+       method: "POST",
+       data: {
+         loginName:this.form.name,
+         status:this.form.region,
+       }
+     }).then(res =>{
+       const data = res.data;
+       this.dialogFormVisible = false;
+       this.$message({type: 'warning', message:data.message});
+       this.onSubmit();
+     })
     },
-    onSubmit() {
-      console.log("submit!");
+    onSubmit() {  //查询
+      this.$http({
+        url: "http://localhost:8080/getUser",
+        method: "GET",
+        params: {
+          userName: this.formInline.user,
+          status: this.formInline.region,
+        },
+      }).then(res =>{
+        const data = res.data;
+        if((data.status >= 200 && data.status<300) || data.status === 304){
+          this.talbeData = data.data;
+        }else{
+          this.$message({ type: 'warning',message: data.message})
+        }
+      })
+    },
+
+    /*
+    deleteUser(){
+      this.$confirm('此操作将永久删除该部门信息，是否继续','提示',{
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$http({
+                      url: "http://localhost:8080/deleteUser",
+                      method: 'POST',
+                      data: {
+                        ids:[]
+                      }
+        }).then(res => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+          this.onSubmit();
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消！'
+        });
+      });
     }
+*/
   }
 };
 </script>
