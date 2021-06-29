@@ -27,6 +27,9 @@ export default new Vuex.Store({
     },
     userName: state => {
       return state.userInfo && state.userInfo.userName;
+    },
+    isAdmin: state => {
+      return state.userInfo && state.userInfo.status === 1;
     }
   },
   plugins: [persistedState({

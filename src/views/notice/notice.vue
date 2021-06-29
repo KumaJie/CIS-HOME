@@ -9,7 +9,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSearch(1)">查询</el-button>
-        <el-button type="primary" @click="onDelete">删除</el-button>
+        <el-button v-if="isAdmin" type="primary" @click="onDelete">删除</el-button>
       </el-form-item>
     </el-form>
 
@@ -26,7 +26,7 @@
       <el-table-column label="公告人" prop="userName"> </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="danger" size="small" @click="edit(scope.row)"
+          <el-button v-if="isAdmin" type="danger" size="small" @click="edit(scope.row)"
             >编辑</el-button
           >
           <el-button type="primary" size="small" @click="seak(scope.row)"
@@ -37,7 +37,7 @@
     </el-table>
 
     <!-- 页面跳转 -->
-    
+
     <el-pagination
       background
       layout="prev, pager, next"
@@ -45,12 +45,14 @@
       @current-change="changePage"
     >
     </el-pagination>
-  
 
     <el-dialog title="修改公告" :visible.sync="dialogFormVisible">
       <el-form :model="updateForm">
         <el-form-item label="公告标题" :label-width="formLabelWidth">
-          <el-input v-model="updateForm.noticeTitle" autocomplete="off"></el-input>
+          <el-input
+            v-model="updateForm.noticeTitle"
+            autocomplete="off"
+          ></el-input>
         </el-form-item>
         <el-form-item label="公告内容" :label-width="formLabelWidth">
           <el-input
@@ -68,18 +70,14 @@
       </div>
     </el-dialog>
 
-    <el-dialog
-      title="预览"
-      :visible.sync="dialogSeakVisible"
-      width="30%"
-    >
+    <el-dialog title="预览" :visible.sync="dialogSeakVisible" width="30%">
       <span>{{ preView }}</span>
     </el-dialog>
-
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -147,7 +145,7 @@ export default {
           noticeTitle: this.queryFrom.noticeTitle,
           noticeContent: this.queryFrom.noticeContent,
           page,
-          size: this.$STATICE_SETTING.pageSize,
+          size: this.$STATICE_SETTING.pageSize
         }
       }).then(res => {
         const data = res.data;
@@ -173,9 +171,9 @@ export default {
         })
         .then(res => {
           if (res.data.status === 200) {
-            this.$message({ type: "success", message: "删除成功"})
+            this.$message({ type: "success", message: "删除成功" });
           } else {
-            this.$message({ type: "warning", message: res.data.message })
+            this.$message({ type: "warning", message: res.data.message });
           }
           this.onSearch(1);
         });
@@ -189,6 +187,9 @@ export default {
   },
   mounted() {
     this.onSearch(1);
+  },
+  computed: {
+    ...mapGetters(["isAdmin"])
   }
 };
 </script>

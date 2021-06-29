@@ -8,7 +8,7 @@
         <el-button type="primary" @click="onQuery()">查询</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="deleteJobs">删除</el-button>
+        <el-button v-if="isAdmin" type="primary" @click="deleteJobs">删除</el-button>
       </el-form-item>
     </el-form>
 
@@ -22,7 +22,7 @@
       <el-table-column type="selection"> </el-table-column>
       <el-table-column label="职位名称" prop="jobName"> </el-table-column>
       <el-table-column label="详细信息" prop="jobRemark"> </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" v-if="isAdmin">
         <template slot-scope="scope">
           <el-button type="danger" size="small" @click="edit(scope.row)"
             >编辑</el-button
@@ -62,6 +62,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -77,7 +78,7 @@ export default {
       talbeData: [],
       // 被选中的表行
       selectedTable: [],
-      dataTotal: 20,
+      dataTotal: 20
     };
   },
   methods: {
@@ -144,6 +145,9 @@ export default {
   },
   mounted() {
     this.onQuery();
+  },
+  computed: {
+    ...mapGetters(["isAdmin"])
   }
 };
 </script>

@@ -16,7 +16,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="queryListUser(1)">查询</el-button>
-        <el-button type="danger" @click="deleteUser">删除</el-button>
+        <el-button v-if="isAdmin" type="danger" @click="deleteUser">删除</el-button>
       </el-form-item>
     </el-form>
 
@@ -32,7 +32,7 @@
       <el-table-column label="用户名" prop="userName"> </el-table-column>
       <el-table-column label="状态" prop="status"> </el-table-column>
       <el-table-column label="创建时间" prop="userCreate"> </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" v-if="isAdmin">
         <template slot-scope="scope">
           <el-button
             type="danger"
@@ -88,6 +88,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import { settingMixin } from "./statusSettingMixin";
 export default {
   mixins: [settingMixin],
@@ -214,6 +215,9 @@ export default {
   },
   mounted() {
     this.queryListUser();
+  },
+  computed: {
+    ...mapGetters(['isAdmin'])
   }
 };
 </script>

@@ -38,7 +38,7 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="search(1)">搜索</el-button>
-        <el-button @click="del">删除</el-button>
+        <el-button v-if="isAdmin" @click="del">删除</el-button>
       </el-form-item>
     </el-form>
 
@@ -61,7 +61,7 @@
       <el-table-column label="联系地址" prop="address"> </el-table-column>
       <el-table-column label="建档日期" prop="employeeCreate">
       </el-table-column>
-      <el-table-column label="操作" fixed="right">
+      <el-table-column label="操作" fixed="right" v-if="isAdmin">
         <template slot-scope="scope">
           <el-button type="danger" size="small" @click="edit(scope.row)"
             >编辑</el-button
@@ -153,7 +153,7 @@
 
 <script>
 import { settingMixin } from "./settingMixin";
-
+import { mapGetters } from "vuex";
 export default {
   mixins: [settingMixin],
   data() {
@@ -280,6 +280,9 @@ export default {
   },
   mounted() {
     this.getList();
+  },
+    computed: {
+    ...mapGetters(['isAdmin'])
   }
 };
 </script>
