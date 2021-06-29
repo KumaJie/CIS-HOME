@@ -153,7 +153,7 @@ export default {
         this.fullscreenLoading = false;
         const data = res.data;
         if ((data.status >= 200 && data.status < 300) || data.status === 304 ) {
-          this.$store.commit('initUserInfo', data.data)
+          this.$store.commit('initUserInfo', data.data.user)
           this.$message({ type: 'success', message: "登录成功" });
           const that = this;
           setTimeout(() => {
