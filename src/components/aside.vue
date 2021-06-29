@@ -1,6 +1,6 @@
 <template>
     <el-menu
-        class="aside"
+        class="side-bar"
         style="width:245px"
         unique-opened
         router
@@ -134,7 +134,7 @@ export default {
 };
 </script>
 <style>
-.aside{
+.side-bar{
     font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
     font-size: 100px;
 }
