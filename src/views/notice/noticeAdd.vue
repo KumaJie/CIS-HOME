@@ -1,25 +1,28 @@
 <template>
   <div>
-    <el-form :model="form">
-      <el-form-item label="公告标题" :label-width="formLabelWidth">
-        <el-input
-          v-model="form.noticeTitle"
-          autocomplete="off"
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="公告内容" :label-width="formLabelWidth">
-        <el-input
-          type="textarea"
-          :rows="2"
-          placeholder="请输入内容"
-          v-model="form.noticeContent"
-        >
-        </el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="addNotice">添加</el-button>
-      </el-form-item>
-    </el-form>
+    <template v-if="isAdmin">
+      <el-form :model="form">
+        <el-form-item label="公告标题" :label-width="formLabelWidth">
+          <el-input
+            v-model="form.noticeTitle"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="公告内容" :label-width="formLabelWidth">
+          <el-input
+            type="textarea"
+            :rows="2"
+            placeholder="请输入内容"
+            v-model="form.noticeContent"
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="addNotice">添加</el-button>
+        </el-form-item>
+      </el-form>
+    </template>
+    <div v-else>你没有权限</div>
   </div>
 </template>
 
@@ -36,7 +39,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['loginUserId'])
+    ...mapGetters(['loginUserId', 'isAdmin'])
   },
   methods: {
     addNotice() {

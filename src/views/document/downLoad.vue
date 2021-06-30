@@ -6,7 +6,7 @@
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="search">搜索</el-button>
-                <el-button type="danger" @click="deleteSelection"
+                <el-button v-if="isAdmin" type="danger" @click="deleteSelection"
                     >删除</el-button
                 >
             </el-form-item>
@@ -30,7 +30,12 @@
             </el-table-column>
             <el-table-column label="描述" prop="documentRemark" align="center">
             </el-table-column>
-            <el-table-column label="操作" width="90px" align="center">
+            <el-table-column
+                label="操作"
+                width="90px"
+                align="center"
+                v-if="isAdmin"
+            >
                 <template slot-scope="scope">
                     <el-button
                         type="danger"
@@ -101,6 +106,7 @@
 
 <script>
 import { getTokenFromStorage } from "@/utils/storage";
+import { mapGetters } from "vuex";
 export default {
     data() {
         return {
@@ -238,6 +244,9 @@ export default {
     },
     mounted() {
         this.getDoc(1);
+    },
+    computed: {
+        ...mapGetters(["isAdmin"]),
     },
 };
 </script>

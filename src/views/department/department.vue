@@ -18,7 +18,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" size="small" @click="deleteListDept"
+          <el-button v-if="isAdmin" type="primary" size="small" @click="deleteListDept"
             >删除</el-button
           >
         </el-form-item>
@@ -34,7 +34,7 @@
       <el-table-column type="selection"> </el-table-column>
       <el-table-column label="部门名称" prop="deptName"> </el-table-column>
       <el-table-column label="详细信息" prop="deptRemark"> </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" v-if="isAdmin">
         <template slot-scope="scope">
           <el-button type="primary" size="small" @click="handleEdit(scope.row)"
             >编辑</el-button
@@ -73,6 +73,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -228,6 +229,9 @@ export default {
   },
   mounted() {
     this.select();
+  },
+    computed: {
+    ...mapGetters(['isAdmin'])
   }
 };
 </script>

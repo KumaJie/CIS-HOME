@@ -1,24 +1,29 @@
 <template>
   <div>
-    <el-form :inline="true" :model="formInline" class="demo-form-inline">
-      <el-form-item label="职位名称：">
-        <el-input v-model="formInline.jobName"></el-input>
-      </el-form-item>
+    <template v-if="true">
+      <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form-item label="职位名称：">
+          <el-input v-model="formInline.jobName"></el-input>
+        </el-form-item>
 
-      <el-form-item label="详细描述：">
-        <el-input v-model="formInline.jobRemark"></el-input>
-      </el-form-item>
-    </el-form>
+        <el-form-item label="详细描述：">
+          <el-input v-model="formInline.jobRemark"></el-input>
+        </el-form-item>
+      </el-form>
 
-    <el-form :inline="true" :model="formInline" class="demo-form-inline">
-      <el-form-item>
-        <el-button type="primary" @click="onAdd">添加</el-button>
-      </el-form-item>
-    </el-form>
+      <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form-item>
+          <el-button type="primary" @click="onAdd">添加</el-button>
+        </el-form-item>
+      </el-form>
+
+    </template>
+    <div v-else>你没有权限</div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
@@ -56,6 +61,9 @@ export default {
       this.formInline.jobName = "";
       this.formInline.jobRemark = "";
     }
+  },
+  computed: {
+    ...mapGetters(['isAdmin'])
   }
 };
 </script>
