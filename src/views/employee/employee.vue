@@ -166,44 +166,7 @@ export default {
         tel: "",
         deptId: ""
       },
-      talbeData: [
-        {
-          employeeName: "张三",
-          sex: "男",
-          tel: "1369902332",
-          email: "@test",
-          jobName: "java高级开发工程师",
-          education: "Ph.D",
-          cardId: "360123xxxx",
-          deptName: "研发部",
-          address: "重庆理工大学",
-          employeeCreate: "2021年6月17日"
-        },
-        {
-          employeeName: "张二",
-          sex: "男",
-          tel: "1369902332",
-          email: "@test",
-          jobName: "java高级开发工程师",
-          education: "Ph.D",
-          cardId: "360123xxxx",
-          deptName: "研发部",
-          address: "重庆理工大学",
-          employeeCreate: "2021年6月17日"
-        },
-        {
-          employeeName: "张一",
-          sex: "男",
-          tel: "1369902332",
-          email: "@test",
-          jobName: "java高级开发工程师",
-          education: "Ph.D",
-          cardId: "360123xxxx",
-          deptName: "研发部",
-          address: "重庆理工大学",
-          employeeCreate: "2021年6月17日"
-        }
-      ],
+      talbeData: [],
       editTable: {
         jobId: "",
         employeeName: "",
@@ -271,10 +234,12 @@ export default {
           }
         })
         .then(res => {
-          res.data.data.forEach(val => {
+          console.log(res);
+          res.data.data.list.forEach(val => {
             val.sex = val.sex == 1 ? "男" : "女";
           });
-          this.talbeData = res.data.data;
+          this.talbeData = res.data.data.list;
+          this.dataTotal = res.data.data.total;
         });
     }
   },

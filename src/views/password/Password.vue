@@ -72,7 +72,7 @@ export default {
         if ((data.status >= 200 && data.status < 300) || data.status === 304 ) {
           this.$message({ type: 'success', message: '修改成功, 即将跳转到登录界面' });
           setTimeout(() => {
-            that.$router.replace({ path: '/login' })
+            this.$router.replace({ path: '/login' })
           }, 1500)
         } else {
           this.$message({ type: 'warning', message: data.message })

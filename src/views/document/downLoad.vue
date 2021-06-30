@@ -163,6 +163,7 @@ export default {
         downLoad(detailInfo) {
             this.$http.post("/downLoad", detailInfo).then((res) => {
                 const url = res.data.message;
+                const suffix = "." + url.split("\.").pop()
                 // 创建a标签
                 let link = document.createElement("a");
                 // 将url转成blob地址，
@@ -172,7 +173,7 @@ export default {
                         // 将blob地址转化成同源URL
                         link.href = URL.createObjectURL(blob);
                         console.log(link.href);
-                        link.download = detailInfo.documentTitle;
+                        link.download = detailInfo.documentTitle + suffix;
                         document.body.appendChild(link);
                         link.click();
                     });
