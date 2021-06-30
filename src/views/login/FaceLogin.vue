@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import { setTokenToStorage } from "@/utils/storage";
 export default {
   name: "FaceLogin",
   data() {
@@ -154,6 +155,7 @@ export default {
         const data = res.data;
         if ((data.status >= 200 && data.status < 300) || data.status === 304 ) {
           this.$store.commit('initUserInfo', data.data.user)
+          setTokenToStorage(data.data.token);
           this.$message({ type: 'success', message: "登录成功" });
           const that = this;
           setTimeout(() => {

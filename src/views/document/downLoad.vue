@@ -154,16 +154,16 @@ export default {
             this.getDoc(1);
         },
         // 下载
-        // 存在问题！！
         downLoad(detailInfo) {
             this.$http.post("/downLoad", detailInfo).then((res) => {
                 const url = res.data.message;
+                // 创建a标签
                 let link = document.createElement("a");
                 // 将url转成blob地址，
                 fetch(url)
                     .then((res) => res.blob())
                     .then((blob) => {
-                        // 将链接地址字符内容转变成blob地址
+                        // 将blob地址转化成同源URL
                         link.href = URL.createObjectURL(blob);
                         console.log(link.href);
                         link.download = detailInfo.documentTitle;
