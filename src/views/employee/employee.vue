@@ -90,8 +90,8 @@
           <el-col :span="10" :offset="2"
             ><el-form-item label="性别">
               <el-select v-model="editTable.sex">
-                <el-option label="男" value="0"></el-option>
-                <el-option label="女" value="1"></el-option>
+                <el-option label="男" value="1"></el-option>
+                <el-option label="女" value="2"></el-option>
               </el-select> </el-form-item
           ></el-col>
         </el-row>
@@ -214,7 +214,11 @@ export default {
         });
     },
     submitEdit() {
-      this.$http.post("modifyEmployee", this.editTable).then(res => {
+      let edit = this.editTable
+      if(edit.sex !== '1' || edit.sex !== '2'){
+        edit.sex = edit.sex === '男' ? '1' : '2';
+      } 
+      this.$http.post("modifyEmployee", edit).then(res => {
         this.getList();
       });
       this.dialogVisible = false;
