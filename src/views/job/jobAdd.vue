@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="true">
+    <template v-if="isAdmin">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="职位名称：">
           <el-input v-model="formInline.jobName"></el-input>
